@@ -56,7 +56,7 @@
                             <h2 class="text-2xl font-semibold text-blue-700">{{ $vuln['Title'] }}</h2>
                             <p class="text-gray-600 mt-2 mb-4 text-sm">{{ $vuln['Description'] ?? 'No description available' }}</p>
                             <p class="text-sm text-gray-500">Published: <span class="font-semibold">{{ $vuln['Published'] }}</span></p>
-                            {{-- <a href="#" class="text-blue-500 hover:text-blue-700 mt-4 inline-block text-sm font-semibold">More Info</a> --}}
+                            <a href="{{ $vuln['Detail_URL'] }}" target="_blank" class="text-blue-500 hover:text-blue-700 mt-4 inline-block text-sm font-semibold">More Info</a>
                         </div>
                     @endforeach
                 </div>

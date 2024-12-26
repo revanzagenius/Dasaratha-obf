@@ -13,7 +13,8 @@ class ShodanHost extends Model
 
     protected $fillable = [
         'ip', 'hostnames', 'country', 'city', 'ports', 'vulns',
-        'isp', 'domains', 'organization', 'asn', 'service_banners','email', // Tambahkan di sini
+        'isp', 'domains', 'organization', 'asn', 'service_banners',
+        'email', 'latitude', 'longitude', // Tambahkan di sini
     ];
 
     protected $casts = [
@@ -23,6 +24,8 @@ class ShodanHost extends Model
         'organization' => 'array',
         'hostnames' => 'array',
         'service_banners' => 'array', // Tambahkan casting ke array
+        'latitude' => 'float', // Casting latitude ke tipe float
+        'longitude' => 'float', // Casting longitude ke tipe float
     ];
 
     public function ports()

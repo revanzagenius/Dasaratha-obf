@@ -132,4 +132,37 @@ class NewsController extends Controller
     return view('feeds.index', ['feeds' => $feeds]);
 }
 
+public function hackernews()
+{
+    $feedUrl = 'https://feeds.feedburner.com/TheHackersNews';
+
+    // Ambil data dari RSS feed
+    $response = Http::get($feedUrl);
+
+    if ($response->ok()) {
+        $xml = simplexml_load_string($response->body());
+
+        // Parsing data RSS menjadi array
+        $articles = [];
+        foreach ($xml->channel->item as $item) {
+            $articles[] = [
+                'title' => (string) $item->title,
+                'description' => (string) $item->description,
+                'url' => (string) $item->link,
+                'urlToImage' => (string) ($item->enclosure['url'] ?? null), // Beberapa feed mungkin memiliki gambar di enclosure
+                'pubDate' => (string) $item->pubDate,
+            ];
+        }
+
+        // Membagi data menjadi `latestNews` dan `otherNews`
+        $latestNews = array_slice($articles, 0, 9);
+        $otherNews = array_slice($articles, 9);
+
+        // Kirim data ke view
+        return view('news.index', compact('latestNews', 'otherNews'));
+    }
+
+    return back()->withErrors('Gagal mengambil data berita.');
+}
+
 }

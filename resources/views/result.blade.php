@@ -16,6 +16,24 @@
                             <td class="py-2 px-4">{{ $host->ip }}</td>
                         </tr>
                         <tr class="border-b">
+                            <th class="py-2 px-4 font-medium">Hostnames</th>
+                            <td class="py-2 px-4">
+                                @php
+                                    $hostnames = json_decode($host->hostnames);
+                                    echo is_array($hostnames) ? implode(', ', $hostnames) : 'N/A';
+                                @endphp
+                            </td>
+                        </tr>
+                        <tr class="border-b">
+                            <th class="py-2 px-4 font-medium">Domains</th>
+                            <td class="py-2 px-4">
+                                @php
+                                    $domains = json_decode($host->domains);
+                                    echo is_array($domains) ? implode(', ', $domains) : 'N/A';
+                                @endphp
+                            </td>
+                        </tr>
+                        <tr class="border-b">
                             <th class="py-2 px-4 font-medium">Country</th>
                             <td class="py-2 px-4">{{ $host->country }}</td>
                         </tr>
@@ -41,6 +59,7 @@
                             </td>
                         </tr>
                     </tbody>
+
                 </table>
                 <div class="flex gap-4 mt-4">
                     <a href="{{ route('dashboard.index') }}" class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800">Back to Dashboard</a>
@@ -49,7 +68,22 @@
             </div>
         </div>
 
-
+        @if(!empty($host->latitude) && !empty($host->longitude))
+        <div class="bg-white text-black rounded-lg shadow-lg p-6 mb-5">
+            <h5 class="text-lg font-bold mb-4">Peta Lokasi IP</h5>
+            <div id="map-{{ $host->id }}" class="h-96"></div>
+            <script>
+                var map = L.map('map-{{ $host->id }}').setView([{{ $host->latitude }}, {{ $host->longitude }}], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap'
+                }).addTo(map);
+                L.marker([{{ $host->latitude }}, {{ $host->longitude }}]).addTo(map)
+                    .bindPopup('<b>IP Address:</b> {{ $host->ip }}<br><b>ISP:</b> {{ $host->isp ?? "N/A" }}')
+                    .openPopup();
+            </script>
+        </div>
+        @endif
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Card untuk Vulnerabilities -->

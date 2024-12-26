@@ -8,6 +8,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Sthree Thread Intell</title>
+    <link rel="icon" type="image/png" href="https://pentestwizard.com/wp-content/uploads/2024/01/wizard-with-binoculars.png" />
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <!-- Tambahkan ini di bagian <head> file layout (resources/views/layouts/app.blade.php) -->
