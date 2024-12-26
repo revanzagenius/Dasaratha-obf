@@ -21,7 +21,7 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware([AuthMiddleware::class])->group(function () {
     //DASHBOARD
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('news.index');
+    Route::get('/dashboard', [DashboardController::class, 'index']);
 
     //NEWS
     Route::get('/news', [NewsController::class, 'index'])->name('news.index');
@@ -55,8 +55,9 @@ Route::middleware([AuthMiddleware::class])->group(function () {
     //ANYRUN
     Route::get('/anyrun/threat-intel', [AnyrunController::class, 'getThreatIntel']);
 
-    Route::get('/search', [DeHashedController::class, 'showForm'])->name('databreach.index');
-    Route::post('/search', [DeHashedController::class, 'search']);
+    Route::get('/search', [DeHashedController::class, 'index'])->name('databreach.index');
+    Route::post('/search', [DeHashedController::class, 'search'])->name('databreach.search');
+
     // Route::post('/scan', [ScanController::class, 'storeScan'])->name('scan.store');
 });
 
