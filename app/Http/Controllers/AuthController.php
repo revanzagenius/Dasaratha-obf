@@ -21,7 +21,7 @@ class AuthController extends Controller
 
         // Cek kredensial
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboard.indexd');
         }
 
         // Kembalikan ke halaman login dengan pesan error

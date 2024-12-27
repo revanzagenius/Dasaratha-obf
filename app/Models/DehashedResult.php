@@ -14,4 +14,5 @@ class DehashedResult extends Model
         'password',
         'status',
     ];
+
 }

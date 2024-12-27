@@ -102,9 +102,9 @@ class MonitorController extends Controller
             $host->cve_details = json_encode($cveDetails);
             $host->save();
 
-            return redirect()->route('dashboard.index')->with('success', 'IP scanned and data saved successfully!');
+            return redirect()->route('monitor.index')->with('success', 'IP scanned and data saved successfully!');
         } catch (\Exception $e) {
-            return redirect()->route('dashboard.index')->withErrors('Failed to scan IP: ' . $e->getMessage());
+            return redirect()->route('monitor.index')->withErrors('Failed to scan IP: ' . $e->getMessage());
         }
     }
 

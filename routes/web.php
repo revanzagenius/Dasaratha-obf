@@ -21,7 +21,7 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware([AuthMiddleware::class])->group(function () {
     //DASHBOARD
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.indexd');
 
     //NEWS
     Route::get('/news', [NewsController::class, 'index'])->name('news.index');
@@ -33,10 +33,10 @@ Route::middleware([AuthMiddleware::class])->group(function () {
 
 
     //DASHBOARD
-    Route::get('/port-monitor', [MonitorController::class, 'index'])->name('dashboard.index');
+    Route::get('/port-monitor', [MonitorController::class, 'index'])->name('monitor.index');
     Route::post('/scan', [MonitorController::class, 'scan'])->name('scan');
     Route::get('/result/{id}', [MonitorController::class, 'showResult'])->name('result');
-    Route::get('/result/{id}/export', [MonitorController::class, 'exportPdf'])->name('dashboard.exportPdf');
+    Route::get('/result/{id}/export', [MonitorController::class, 'exportPdf'])->name('monitor.exportPdf');
     Route::post('/shodan/new-port', [MonitorController::class, 'handleNewPortData']);
 
     // OSINT

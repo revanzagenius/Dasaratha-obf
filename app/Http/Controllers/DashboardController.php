@@ -9,16 +9,60 @@ use App\Models\Domain;
 use GuzzleHttp\Client;
 use App\Models\ShodanHost;
 use Illuminate\Http\Request;
+use App\Models\DehashedResult;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class DashboardController extends Controller
 {
-    public function index()
+
+    public function index(Request $request)
     {
-        $domainsCount = Domain::count(); // Menghitung jumlah data di tabel domains
-        $portsCount = Port::count();    // Menghitung jumlah data di tabel ports
-        return view('dashboard.index', compact('domainsCount', 'portsCount'));
+        $domainsCount = Domain::count();
+        $portsCount = Port::count();
+
+        // Default filter adalah per bulan
+        $filter = $request->get('filter', 'month');
+
+        $emailsOverTime = DehashedResult::selectRaw('DATE(created_at) as date, COUNT(email) as email_count');
+
+        if ($filter === 'day') {
+            $emailsOverTime = $emailsOverTime->where('created_at', '>=', now()->subDays(7));
+        } elseif ($filter === 'month') {
+            $emailsOverTime = $emailsOverTime->where('created_at', '>=', now()->subMonth());
+        } elseif ($filter === 'year') {
+            $emailsOverTime = $emailsOverTime->where('created_at', '>=', now()->subYear());
+        }
+
+        $emailsOverTime = $emailsOverTime->groupBy('date')->orderBy('date', 'asc')->get();
+
+        // Hitung jumlah email yang ter-ekspos
+        $dataExposeCount = DehashedResult::whereNotNull('email')->count();
+
+        // Ambil data Ports dan Vulnerabilities
+        $shodanHosts = ShodanHost::select('ports', 'vulns')->get();
+
+        // Hitung jumlah ports dan vulnerabilities
+        $totalPorts = $shodanHosts->reduce(fn($carry, $host) => $carry + count(json_decode($host->ports, true) ?? []), 0);
+        $totalVulns = $shodanHosts->reduce(fn($carry, $host) => $carry + count(json_decode($host->vulns, true) ?? []), 0);
+
+        // Ambil data latitude dan longitude dari ShodanHost
+        $locations = ShodanHost::select('latitude', 'longitude', 'ip')->get();
+
+        return view('dashboard.index', compact(
+            'domainsCount',
+            'portsCount',
+            'emailsOverTime',
+            'filter',
+            'locations',
+            'dataExposeCount',
+            'totalPorts', // Total ports untuk chart
+            'totalVulns'  // Total vulnerabilities untuk chart
+        ));
     }
+
+
+
+
 
     // protected $client;
     // protected $shodanApiKey;

@@ -51,23 +51,21 @@
                 <table class="w-full text-left text-sm bg-white text-black border border-gray-300 rounded-lg">
                     <thead>
                         <tr class="bg-gray-200 text-gray-800 border-b border-gray-300">
-                            <th class="px-4 py-2">ID</th>
                             <th class="px-4 py-2">Username</th>
                             <th class="px-4 py-2">Email</th>
                             <th class="px-4 py-2">Password</th>
                             <th class="px-4 py-2">Hash</th>
-                            <th class="px-4 py-2">Updated At</th> <!-- Added Updated At Column -->
+                            <th class="px-4 py-2">Last Scan</th> <!-- Added Updated At Column -->
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($allData as $entry) <!-- Display all data -->
                             <tr class="hover:bg-gray-100">
-                                <td class="px-4 py-2 border-t border-gray-300">{{ $entry->id ?? '-' }}</td>
                                 <td class="px-4 py-2 border-t border-gray-300">{{ $entry->username ?? '-' }}</td>
                                 <td class="px-4 py-2 border-t border-gray-300">{{ $entry->email ?? '-' }}</td>
                                 <td class="px-4 py-2 border-t border-gray-300">{{ $entry->password ?? '-' }}</td>
                                 <td class="px-4 py-2 border-t border-gray-300">{{ $entry->hash ?? '-' }}</td>
-                                <td class="px-4 py-2 border-t border-gray-300">{{ $entry->updated_at ?? 'N/A' }}</td> <!-- Display updated_at -->
+                                <td class="px-4 py-2 border-t border-gray-300">{{ $entry->last_scanned_at ?? 'N/A' }}</td> <!-- Display updated_at -->
                             </tr>
                         @endforeach
                     </tbody>
