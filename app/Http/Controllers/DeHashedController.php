@@ -86,5 +86,5 @@ class DeHashedController extends Controller
 
     Log::error('API request failed for domain: ' . $domain);
     return null;
-}
+    }
 }

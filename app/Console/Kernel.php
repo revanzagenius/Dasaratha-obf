@@ -25,14 +25,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // Menjadwalkan pengecekan port setiap 15 menit
-        $schedule->command('shodan:check-new-ports')->everyFiveMinutes();
         $schedule->command('domains:update')->daily(); // Menjadwalkan pembaruan domain tiap hari
-
-            $schedule->call(function () {
-                $domain = 'obf.id'; // Ganti dengan domain yang ingin dipindai
-                app(\App\Http\Controllers\DeHashedController::class)->search($domain); // Memanggil fungsi search
-            })->daily(); // Menjadwalkan untuk dijalankan setiap hari
     }
 
     /**

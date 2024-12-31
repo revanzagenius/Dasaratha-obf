@@ -13,6 +13,7 @@ class DehashedResult extends Model
         'email',
         'password',
         'status',
+        'last_scanned_at',
     ];
 
 }
