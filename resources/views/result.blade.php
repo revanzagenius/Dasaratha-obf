@@ -62,8 +62,8 @@
 
                 </table>
                 <div class="flex gap-4 mt-4">
-                    <a href="{{ route('dashboard.index') }}" class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800">Back to Dashboard</a>
-                    <a href="{{ route('dashboard.exportPdf', $host->id) }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Export to PDF</a>
+                    <a href="{{ route('dashboard.indexd') }}" class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800">Back to Dashboard</a>
+                    <a href="{{ route('monitor.exportPdf', $host->id) }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Export to PDF</a>
                 </div>
             </div>
         </div>

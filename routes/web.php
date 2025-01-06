@@ -3,6 +3,7 @@
 use App\Mail\TestEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CVEController;
 use App\Http\Middleware\AuthMiddleware;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NewsController;
@@ -27,10 +28,17 @@ Route::middleware([AuthMiddleware::class])->group(function () {
     Route::get('/news', [NewsController::class, 'index'])->name('news.index');
     Route::get('/malware-trends', [NewsController::class, 'malware'])->name('malware.index');
     Route::get('/malware/{name}', [NewsController::class, 'detail'])->name('malware.detail');
-    Route::get('/vulnerabilities', [NewsController::class, 'cve'])->name('cve.index');
     Route::get('/feeds', [NewsController::class, 'Feeds']);
     Route::get('/hackernews', [NewsController::class, 'hackernews'])->name('hackernews');
 
+
+    Route::get('/vulnerabilities-dashboard', [CVEController::class, 'index'])->name('vulndashboard.index');
+    Route::get('/cve', [CVEController::class, 'circl'])->name('cve.index');
+    // Route::get('cve/{cveId}/details', [CveController::class, 'showDetail'])->name('cve.detail');
+
+    // Route::get('/vulnerabilities', [CVEController::class, 'cve'])->name('cve.index');
+    // Route::get('/nvd-feeds', [CVEController::class, 'nvd'])->name('cvenvd.index');
+    Route::get('/circl.lu-others', [CVEController::class, 'others'])->name('others.index');
 
     //DASHBOARD
     Route::get('/port-monitor', [MonitorController::class, 'index'])->name('monitor.index');

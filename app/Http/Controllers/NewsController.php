@@ -91,24 +91,6 @@ class NewsController extends Controller
         return view('malware-detail')->with('malware', $malware_detail);
     }
 
-    public function cve()
-    {
-        // Memeriksa apakah file cve.json ada di storage
-        $filePath = storage_path('app/cve.json');
-        if (file_exists($filePath)) {
-            // Membaca konten file JSON
-            $vulnerabilities = json_decode(file_get_contents($filePath), true);
-
-            // Memeriksa apakah data ditemukan
-            if (isset($vulnerabilities) && is_array($vulnerabilities)) {
-                return view('cvefeed.index', compact('vulnerabilities'));
-            } else {
-                return view('cvefeed.index')->with('error', 'No vulnerabilities data found.');
-            }
-        } else {
-            return view('cvefeed.index')->with('error', 'CVE file not found.');
-        }
-    }
 
     public function Feeds()
 {
