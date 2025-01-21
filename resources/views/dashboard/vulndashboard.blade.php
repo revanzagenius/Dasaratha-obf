@@ -45,34 +45,46 @@
         </div>
 
         <!-- Detailed Vulnerabilities Table -->
-        <div class="bg-white shadow-md rounded p-4 mt-6">
-            <h2 class="text-lg font-semibold mb-4">Vulnerability Details</h2>
-            <table class="table-auto w-full">
-                <thead>
-                    <tr class="bg-gray-200">
-                        <th class="px-4 py-2">CVE ID</th>
-                        <th class="px-4 py-2">Description</th>
-                        <th class="px-4 py-2">CVSS Score</th>
-                        <th class="px-4 py-2">Published At</th>
-                        <th class="px-4 py-2">Detail</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($vulnerabilities as $vulnerability)
-                    <tr class="border-t">
-                        <td class="px-4 py-2">{{ $vulnerability->cve_id }}</td>
-                        <td class="px-4 py-2">{{ $vulnerability->description }}</td>
-                        <td class="px-4 py-2">{{ $vulnerability->cvss_score }}</td>
-                        <td class="px-4 py-2">{{ $vulnerability->published_at }}</td>
-                        <td class="px-4 py-2">
-                            <a href="{{ $vulnerability->detail_url }}" target="_blank" class="text-blue-500 hover:text-blue-700">View Details</a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
+<div class="bg-white shadow-md rounded p-4 mt-6">
+    <h2 class="text-lg font-semibold mb-4">Vulnerability Details</h2>
+    <table class="table-auto w-full">
+        <thead>
+            <tr class="bg-gray-200">
+                <th class="px-4 py-2">CVE ID</th>
+                <th class="px-4 py-2">Description</th>
+                <th class="px-4 py-2">CVSS Score</th>
+                <th class="px-4 py-2">Published At</th>
+                <th class="px-4 py-2">Detail</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($vulnerabilities as $vulnerability)
+            <tr class="border-t">
+                <td class="px-4 py-2">{{ $vulnerability->cve_id }}</td>
+                <td class="px-4 py-2">{{ $vulnerability->description }}</td>
+                <td class="px-4 py-2">
+                    <span
+                        @if($vulnerability->cvss_score < 4)
+                            class="text-green-500 border border-green-500 px-2 py-1 rounded"
+                        @elseif($vulnerability->cvss_score < 7)
+                            class="text-yellow-500 border border-yellow-500 px-2 py-1 rounded"
+                        @else
+                            class="text-red-500 border border-red-500 px-2 py-1 rounded"
+                        @endif
+                    >
+                        {{ $vulnerability->cvss_score }}
+                    </span>
+                </td>
+                <td class="px-4 py-2">{{ $vulnerability->published_at }}</td>
+                <td class="px-4 py-2">
+                    <a href="{{ $vulnerability->detail_url }}" target="_blank" class="text-blue-500 hover:text-blue-700">View Details</a>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+
 
     <script>
         // Vulnerability Stream by Days
@@ -113,5 +125,28 @@
         var chartPie = new ApexCharts(document.querySelector("#severityChart"), optionsPie);
         chartPie.render();
     </script>
-</body>
+
+{{-- <script>
+    // Top Vendors
+    const topVendorsData = @json(array_values($topVendors));
+    const topVendorsLabels = @json(array_keys($topVendors));
+
+    var vendorsOptions = {
+        chart: {
+            type: 'bar',
+            height: 350
+        },
+        series: [{
+            name: 'Number of CVEs',
+            data: topVendorsData
+        }],
+        xaxis: {
+            categories: topVendorsLabels
+        }
+    };
+
+    var vendorsChart = new ApexCharts(document.querySelector("#vendorsChart"), vendorsOptions);
+    vendorsChart.render();
+</script>
+</body> --}}
 @endsection

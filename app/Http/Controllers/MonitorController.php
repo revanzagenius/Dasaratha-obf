@@ -23,7 +23,6 @@ class MonitorController extends Controller
     {
         // Ambil semua data ShodanHost dari database
         $hosts = ShodanHost::all();
-
         // Kirim data ke view 'dashboard'
         return view('dashboard', compact('hosts'));
     }
@@ -35,6 +34,18 @@ class MonitorController extends Controller
 
         // Kirim data ke view 'result'
         return view('result', compact('host'));
+    }
+
+    public function destroy($id)
+    {
+        $host = ShodanHost::find($id);
+        if (!$host) {
+            return response()->json(['message' => 'Host not found'], 404);
+        }
+
+        $host->delete();
+
+        return redirect()->back()->with('success', 'Host deleted successfully.');
     }
 
     public function scan(Request $request)

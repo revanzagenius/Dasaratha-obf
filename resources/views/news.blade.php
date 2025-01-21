@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-@section('title', 'IP Vulnerability Scanner')
-
 @section('content')
     <div class="container mx-auto py-10">
         <!-- Berita Terbaru -->

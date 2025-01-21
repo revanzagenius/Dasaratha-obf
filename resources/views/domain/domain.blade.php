@@ -43,9 +43,11 @@
         </div>
     </div>
 
+
     <!-- Domain List (Tabel yang menampilkan daftar domain) -->
     <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
-        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <h3><b>DOMAIN</b></h3>
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-2">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" class="px-6 py-3">Domain Name</th>
@@ -78,12 +80,57 @@
                         <td class="px-6 py-4 countdown" data-expiry="{{ $domain->expiry_date }}"></td>
                         <td class="px-6 py-4">
                             <a href="{{ route('domains.downloadPdf') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Unduh PDF</a>
+                          <!-- Tombol Delete dengan Ikon X -->
+                            <!-- Tombol Delete -->
+                        <form action="{{ route('domains.destroy', $domain->id) }}" method="POST" class="inline-block">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
+                                onclick="return confirm('Are you sure you want to delete this domain?');">
+                                Delete
+                            </button>
+                        </form>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
+
+    <!-- Domain List (Tabel yang menampilkan daftar domain) -->
+    <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
+        <h3><b>SUB DOMAIN</b></h3>
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-2">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">No</th>
+                    <th scope="col" class="px-6 py-3">Sub Domain</th>
+                    <th scope="col" class="px-6 py-3">First Seen</th>
+                    <th scope="col" class="px-6 py-3">Last Seen</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!empty($subdomainRecords))
+                    @foreach ($subdomainRecords as $record)
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <td class="px-6 py-4">{{ $loop->iteration }}</td>
+                            <td class="px-6 py-4">{{ $record['domain'] }}</td>
+                            <td class="px-6 py-4">{{ date('Y-m-d H:i:s', $record['firstSeen']) }}</td>
+                            <td class="px-6 py-4">{{ date('Y-m-d H:i:s', $record['lastSeen']) }}</td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 text-center">Tidak ada subdomain yang ditemukan</td>
+                    </tr>
+                @endif
+            </tbody>
+        </table>
+    </div>
+
+
+
 
     <!-- Countdown Script -->
     <script>

@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Models\Vulnerability;
 use Illuminate\Support\Facades\Http;
 
 class CVEController extends Controller
 {
+    // Tidak menggunakan Http sebagai trait
+
     public function index()
     {
         // Fetch data for the dashboard
@@ -29,7 +32,25 @@ class CVEController extends Controller
             'High' => Vulnerability::where('cvss_score', '>=', 7)->count(),
         ];
 
-        // Get all vulnerabilities for the table
+        // // Fetch top vendors and their CVE counts
+        // $username = 'revanzavarmillion';
+        // $password = 'rohis1403';
+        // $vendors = ['redhat', 'microsoft', 'google', 'apple', 'oracle', 'debian', 'linux', 'ibm', 'cisco', 'adobe'];
+        // $topVendors = [];
+
+
+        // foreach ($vendors as $vendor) {
+        //     $response = Http::withBasicAuth($username, $password)
+        //         ->get("https://app.opencve.io/api/vendors/{$vendor}");
+        //     if ($response->successful()) {
+        //         $vendorData = $response->json();
+        //         $topVendors[$vendor] = $vendorData['cve_count'] ?? 0; // Ambil jumlah CVE
+        //     } else {
+        //         $topVendors[$vendor] = 0; // Default 0 jika gagal
+        //     }
+        // }
+
+        // dd($topVendors);
         $vulnerabilities = Vulnerability::orderBy('published_at', 'desc')->get();
 
         return view('dashboard.vulndashboard', compact(
@@ -38,9 +59,11 @@ class CVEController extends Controller
             'weeklyExploited',
             'vulnerabilityData',
             'severityDistribution',
-            'vulnerabilities'
+            'vulnerabilities',
         ));
     }
+
+
 
 
     public function cve()
@@ -61,6 +84,132 @@ class CVEController extends Controller
             return view('cvefeed.index')->with('error', 'CVE file not found.');
         }
     }
+
+    public function opencve(Request $request)
+    {
+        $client = new Client();
+        $page = $request->query('page', 1); // Halaman default 1
+        $query = $request->input('query');
+        $filterType = $request->input('filter_type'); // 'cve', 'vendors', atau 'products'
+
+        $username = 'revanzavarmillion';
+        $password = 'rohis1403';
+
+        try {
+            if ($query) {
+                // Logika pencarian
+                $url = match ($filterType) {
+                    'vendors' => "https://app.opencve.io/api/vendors/{$query}/cve",
+                    'products' => "https://app.opencve.io/api/vendors/{$query}/products",
+                    default => "https://app.opencve.io/api/cve/{$query}",
+                };
+
+                $response = Http::withBasicAuth($username, $password)->get($url);
+                if ($response->successful()) {
+                    $data = $response->json();
+                    $results = match ($filterType) {
+                        'vendors', 'products' => $data['results'],
+                        default => [$data],
+                    };
+
+                    return view('opencve.index', [
+                        'total' => count($results),
+                        'results' => $results,
+                        'currentPage' => $page,
+                    ]);
+                } else {
+                    return view('opencve.index', [
+                        'total' => 0,
+                        'results' => [],
+                        'currentPage' => $page,
+                        'error' => 'No data found.',
+                    ]);
+                }
+            } else {
+                // Logika menampilkan semua data CVE
+                $url = "https://app.opencve.io/api/cve?page={$page}";
+                $response = $client->get($url, [
+                    'auth' => [$username, $password]
+                ]);
+
+                $data = json_decode($response->getBody()->getContents(), true);
+
+                return view('opencve.index', [
+                    'total' => $data['count'],
+                    'results' => $data['results'],
+                    'currentPage' => $page,
+                ]);
+            }
+        } catch (\Exception $e) {
+            return view('opencve.index', [
+                'total' => 0,
+                'results' => [],
+                'currentPage' => $page,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+
+
+    public function showCVE($id)
+    {
+        $username = 'revanzavarmillion';
+        $password = 'rohis1403';
+
+        $response = Http::withBasicAuth($username, $password)
+            ->get("https://app.opencve.io/api/cve/{$id}");
+
+        if ($response->successful()) {
+            $data = $response->json();
+
+            // Tambahkan default value untuk data kosong
+            $data['metrics']['cvssV3_1'] = $data['metrics']['cvssV3_1']['data']['score'] ?? 'N/A';
+            $data['metrics']['kev'] = $data['metrics']['kev']['provider'] ?? 'N/A';
+            $data['metrics']['ssvc'] = $data['metrics']['ssvc']['provider'] ?? 'N/A';
+            $data['vendors'] = $data['vendors'] ?? [];
+            $data['references'] = $data['references'] ?? [];
+            $data['history'] = $data['history'] ?? [];
+
+            return view('opencve.details', ['cve' => $data]);
+        }
+
+        abort(404, 'CVE not found.');
+    }
+
+//     public function searchCVE(Request $request)
+// {
+//     $query = $request->input('query');
+//     $filterType = $request->input('filter_type'); // 'cve' atau 'vendors'
+
+//     $username = 'revanzavarmillion';
+//     $password = 'rohis1403';
+
+//     $url = $filterType === 'product'
+//         ? "https://app.opencve.io/api/vendors/{$query}/cve"
+//         : "https://app.opencve.io/api/cve/{$query}";
+
+//     try {
+//         $response = Http::withBasicAuth($username, $password)->get($url);
+
+//         if ($response->successful()) {
+//             $data = $response->json();
+
+//             // Data untuk tabel
+//             $results = $filterType === 'product' ? $data['results'] : [$data];
+
+//             return view('opencve.index', [
+//                 'results' => $results,
+//                 'total' => count($results),
+//             ]);
+//         } else {
+//             return redirect()->back()->with('error', 'No data found.');
+//         }
+//     } catch (\Exception $e) {
+//         return redirect()->back()->with('error', 'Failed to fetch data: ' . $e->getMessage());
+//     }
+// }
+
 
     // public function nvd()
     // {
@@ -167,7 +316,7 @@ class CVEController extends Controller
                     Vulnerability::create([
                         'cve_id' => $cveId,
                         'description' => $item['containers']['cna']['descriptions'][0]['value'] ?? 'No description available',
-                        'cvss_score' => $item['containers']['cna']['metrics'][0]['cvssV4_0']['baseScore'] ?? null,
+                        'cvss_score' => $item['containers']['cna']['metrics'][0]['cvssV3_1']['baseScore'] ?? null,
                         'published_at' => $publishedAt ? Carbon::parse($publishedAt)->format('Y-m-d H:i:s') : null,
                         'detail_url' => "https://cve.mitre.org/cgi-bin/cvename.cgi?name=" . $cveId,
                     ]);
@@ -192,7 +341,6 @@ class CVEController extends Controller
             ]);
         }
     }
-
     // public function showDetail($cveId)
     // {
     //     // Endpoint API untuk mendapatkan detail CVE berdasarkan cveId
@@ -216,7 +364,6 @@ class CVEController extends Controller
     //         return redirect()->route('circl.index')->with('error', 'Failed to fetch CVE details');
     //     }
     // }
-}
 
 // public function others()
 // {
@@ -264,4 +411,5 @@ class CVEController extends Controller
 //         return response()->json(['error' => 'No vulnerabilities found'], 400);
 //     }
 // }
+}
 

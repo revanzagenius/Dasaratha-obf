@@ -49,8 +49,22 @@
     @else
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             @foreach ($hosts as $host)
-                <div
-                    class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+            <div
+                    class="relative max-w-sm bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+                    <!-- Tombol Delete dengan Ikon X -->
+                    <form action="{{ route('hosts.destroy', $host->id) }}" method="POST" class="absolute top-2 right-2">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                            class="text-gray-500 hover:text-red-700 dark:text-gray-400 dark:hover:text-red-400"
+                            onclick="return confirm('Are you sure you want to delete this host?');">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        </button>
+                    </form>
                     <div class="p-5">
                         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center">
                             Details</h5>
@@ -79,7 +93,6 @@
                                 </tr>
                             </tbody>
                         </table>
-
                         <div class="mt-4 space-y-2">
                             <a href="{{ route('result', ['id' => $host->id]) }}"
                                 class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 w-full">
@@ -105,4 +118,5 @@
             form.classList.toggle('hidden');
         });
     </script>
+
 @endsection

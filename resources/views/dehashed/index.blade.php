@@ -46,6 +46,47 @@
                 </div>
             </div> --}}
 
+
+            <!-- VIP Table -->
+            <div class="mt-8">
+                <h5><b>VIP Monitor Email List</b></h5>
+                <table class="w-full text-left text-sm bg-white text-black border border-gray-300 rounded-lg">
+                    <thead>
+                        <tr class="bg-gray-200 text-gray-800 border-b border-gray-300">
+                            <th class="px-4 py-2">Type</th>
+                            <th class="px-4 py-2">Data Point</th>
+                            <th class="px-4 py-2">Created</th>
+                            <th class="px-4 py-2">Last Modified</th>
+                            <th class="px-4 py-2">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-gray-100">
+                            <td class="px-4 py-2 border-t border-gray-300">
+                                <span class="text-yellow-500 border border-yellow-500 px-2 py-1 rounded">EMAIL</span>
+                            </td>
+                            <td class="px-4 py-2 border-t border-gray-300">KUNIAKI.TACHIKI@OBF.ID</td>
+                            <td class="px-4 py-2 border-t border-gray-300">24 DEC 2024</td>
+                            <td class="px-4 py-2 border-t border-gray-300">24 DEC 2024</td>
+                            <td class="px-4 py-2 border-t border-gray-300">
+                                <span class="text-green-500 border border-green-500 px-2 py-1 rounded">RUNNING</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-100">
+                            <td class="px-4 py-2 border-t border-gray-300">
+                                <span class="text-yellow-500 border border-yellow-500 px-2 py-1 rounded">EMAIL</span>
+                            </td>
+                            <td class="px-4 py-2 border-t border-gray-300">CHRISTIAN.TOK@OBF.ID</td>
+                            <td class="px-4 py-2 border-t border-gray-300">24 DEC 2024</td>
+                            <td class="px-4 py-2 border-t border-gray-300">24 DEC 2024</td>
+                            <td class="px-4 py-2 border-t border-gray-300">
+                                <span class="text-green-500 border border-green-500 px-2 py-1 rounded">RUNNING</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
             <!-- Results Table -->
             <div class="mt-8">
                 <table class="w-full text-left text-sm bg-white text-black border border-gray-300 rounded-lg">

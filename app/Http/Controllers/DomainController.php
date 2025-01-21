@@ -7,6 +7,7 @@ use App\Models\Domain;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Services\WhoisAPIService;
+use Illuminate\Support\Facades\Http;
 
 class DomainController extends Controller
 {
@@ -16,6 +17,37 @@ class DomainController extends Controller
     {
         $this->whoisService = $whoisService;
     }
+
+    public function destroy($id)
+    {
+        $domain = Domain::findOrFail($id); // Ganti `Domain` dengan nama model Anda
+        $domain->delete();
+
+        return redirect()->back()->with('success', 'Domain deleted successfully.');
+    }
+
+    // Method untuk menampilkan daftar domain
+    public function index()
+    {
+        $domains = Domain::all();
+
+        // Contoh pengambilan data subdomain
+        $apiUrl = 'https://subdomains.whoisxmlapi.com/api/v1';
+        $apiKey = 'at_5SxsDTwFo6BS58R90Bi3pal5lg06t';
+        $domainName = 'obf.id';
+
+        $response = Http::get($apiUrl, [
+            'apiKey' => $apiKey,
+            'domainName' => $domainName,
+        ]);
+
+        $subdomainRecords = $response->successful()
+            ? $response->json()['result']['records'] ?? []
+            : [];
+
+        return view('domain.domain', compact('domains', 'subdomainRecords'));
+    }
+
 
     // Method untuk menambahkan dan menyimpan data domain
     public function fetchAndStoreDomainData(Request $request)
@@ -50,11 +82,33 @@ class DomainController extends Controller
         return redirect()->back()->with('error', 'Gagal mengambil data domain.');
     }
 
-    // Method untuk menampilkan daftar domain
-    public function index()
+    public function subdomain()
     {
-        $domains = Domain::all();
-        return view('domain', compact('domains'));
+            // URL API dengan domain yang diinginkan
+            $apiUrl = 'https://subdomains.whoisxmlapi.com/api/v1';
+            $apiKey = 'at_5SxsDTwFo6BS58R90Bi3pal5lg06t';
+            $domainName = 'obf.id';
+
+            // Panggil API menggunakan Facade HTTP
+            $response = Http::get($apiUrl, [
+                'apiKey' => $apiKey,
+                'domainName' => $domainName,
+            ]);
+
+            // Periksa apakah respons berhasil
+            if ($response->successful()) {
+                // Parse data JSON dari API
+                $data = $response->json();
+
+                // Kirim data ke view untuk ditampilkan
+                return view('domain.subdomain', [
+                    'search' => $data['search'] ?? null,
+                    'records' => $data['result']['records'] ?? [],
+                ]);
+            }
+
+            // Jika gagal, kembalikan error
+            return back()->withErrors('Gagal mendapatkan data subdomain dari API.');
     }
 
     // Method untuk download PDF

@@ -15,5 +15,4 @@ class DehashedResult extends Model
         'status',
         'last_scanned_at',
     ];
-
 }

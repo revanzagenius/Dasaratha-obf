@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVE-2025-0247</title>
+    <script src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.js"></script>
+    <script src="https://unpkg.com/flowbite@1.6.0/dist/flowbite.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@1.6.0/dist/flowbite.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <!-- Header Section -->
+        <div class="bg-white shadow rounded p-4 mb-6">
+            <h1 class="text-2xl font-bold mb-2">CVE-2025-0247</h1>
+            <p class="text-gray-600">Memory safety bugs present in Firefox 133 and Thunderbird 133. Some of these bugs showed evidence of memory corruption and we presume that with enough effort some of these could have been exploited to run arbitrary code. This vulnerability affects Firefox &lt; 134 and Thunderbird &lt; 134.</p>
+        </div>
+
+        <!-- Metrics Section -->
+        <div class="bg-white shadow rounded p-4 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Metrics</h2>
+            <div class="grid grid-cols-3 gap-4">
+                <div class="p-4 border rounded bg-gray-50">
+                    <p class="text-sm font-medium">CVSS v3.1</p>
+                    <p class="text-xl text-red-600 font-bold">8.8 High</p>
+                </div>
+                <div class="p-4 border rounded bg-gray-50">
+                    <p class="text-sm font-medium">KEV</p>
+                    <p class="text-xl font-bold">No</p>
+                </div>
+                <div class="p-4 border rounded bg-gray-50">
+                    <p class="text-sm font-medium">SSVC</p>
+                    <p class="text-xl text-green-600 font-bold">Yes</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Affected Vendors & Products -->
+        <div class="bg-white shadow rounded p-4 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Affected Vendors & Products</h2>
+            <div class="text-gray-500">No data available.</div>
+        </div>
+
+        <!-- References Section -->
+        <div class="bg-white shadow rounded p-4 mb-6">
+            <h2 class="text-xl font-semibold mb-4">References</h2>
+            <ul class="list-disc list-inside text-blue-600">
+                <li><a href="https://bugzilla.mozilla.org/buglist.cgi?bug_id=1835193%2C1910021%2C1919803%2C1931576%2C1931948%2C1932173" target="_blank" class="hover:underline">Bugzilla Report</a></li>
+                <li><a href="https://www.mozilla.org/security/advisories/mfsa2025-01/" target="_blank" class="hover:underline">Mozilla Advisory 1</a></li>
+                <li><a href="https://www.mozilla.org/security/advisories/mfsa2025-04/" target="_blank" class="hover:underline">Mozilla Advisory 2</a></li>
+            </ul>
+        </div>
+
+        <!-- History Section -->
+        <div class="bg-white shadow rounded p-4">
+            <h2 class="text-xl font-semibold mb-4">History</h2>
+            <div class="overflow-auto">
+                <table class="w-full border-collapse border border-gray-300">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="border border-gray-300 p-2">Date</th>
+                            <th class="border border-gray-300 p-2">Type</th>
+                            <th class="border border-gray-300 p-2">Values Removed</th>
+                            <th class="border border-gray-300 p-2">Values Added</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border border-gray-300 p-2">Thu, 09 Jan 2025 08:45:00 +0000</td>
+                            <td class="border border-gray-300 p-2">Update</td>
+                            <td class="border border-gray-300 p-2">Memory safety bugs present in Firefox 132 and Thunderbird 132...</td>
+                            <td class="border border-gray-300 p-2">Memory safety bugs present in Firefox 133 and Thunderbird 133...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
