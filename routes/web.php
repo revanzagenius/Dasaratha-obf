@@ -9,19 +9,24 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ScanController;
 use App\Http\Controllers\AnyrunController;
+use App\Http\Controllers\BreachController;
 use App\Http\Controllers\DomainController;
 use App\Http\Controllers\ShodanController;
 use App\Http\Controllers\ThreatController;
 use App\Http\Controllers\MonitorController;
+use App\Http\Controllers\RSSFeedController;
 use App\Http\Controllers\DeHashedController;
+use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Middleware\AutoLogoutMiddleware;
+use App\Http\Middleware\SingleSessionMiddleware;
 
 Route::get('/', [AuthController::class, 'index'])->name('login.index');
 Route::post('/', [AuthController::class, 'login'])->name('login.submit');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
-Route::middleware([AuthMiddleware::class])->group(function () {
+Route::middleware([AuthMiddleware::class, AutoLogoutMiddleware::class, SingleSessionMiddleware::class])->group(function () {
     Route::get('/user-management', [AuthController::class, 'usermanagement'])->name('user.management');
     Route::get('/login-logs', [AuthController::class, 'loglogin'])->name('login-logs');
     Route::post('/user-management', [AuthController::class, 'store'])->name('user.store');
@@ -69,6 +74,7 @@ Route::middleware([AuthMiddleware::class])->group(function () {
     Route::post('/shodan/scan', [ScanController::class, 'scan']); // Rute untuk melakukan pemindaian
 
     //DOMAIN
+    Route::get('/domains/organization', [DomainController::class, 'organization'])->name('organization');
     Route::get('/domains', [DomainController::class, 'index'])->name('domains.index');
     Route::post('/domains', [DomainController::class, 'fetchAndStoreDomainData'])->name('domains.store');
     Route::delete('/domains/{id}', [DomainController::class, 'destroy'])->name('domains.destroy');
@@ -81,6 +87,13 @@ Route::middleware([AuthMiddleware::class])->group(function () {
     Route::get('/search', [DeHashedController::class, 'index'])->name('databreach.index');
     Route::post('/search', [DeHashedController::class, 'search'])->name('databreach.search');
 
+
+    Route::get('/rss-mostrecent', [RSSFeedController::class, 'mostrecent'])->name('rss.mostrecent');
+    Route::get('/rss-indonesia', [RSSFeedController::class, 'indonesia'])->name('rss.indonesia');
+
+    Route::get('/breaches', [BreachController::class, 'index'])->name('breaches.index');
+
+    Route::get('/passwords', [PasswordController::class, 'index'])->name('passwords.index');
     // Route::post('/scan', [ScanController::class, 'storeScan'])->name('scan.store');
 });
 

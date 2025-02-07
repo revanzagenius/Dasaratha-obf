@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Models\Vulnerability;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 
 class CVEController extends Controller
@@ -288,58 +289,50 @@ class CVEController extends Controller
             'X-API-KEY' => 'ru1oeiel55o4k473XG9JAxieE2FA9e2VO0KUIrw5m8XfWHgW9-w9JleCMQ-cI9JCcK2tR6sGVMN2PpEFBDG8Wg',
         ];
 
-        // Melakukan permintaan GET ke API
-        $response = Http::withHeaders($headers)->get($url);
+        try {
+            // Melakukan permintaan GET ke API dengan batas waktu 30 detik
+            $response = Http::withHeaders($headers)->timeout(30)->get($url);
 
-        // Memastikan status response sukses
-        if ($response->successful()) {
-            // Ambil data dari respons API
-            $data = $response->json();
+            // Memastikan status response sukses
+            if ($response->successful()) {
+                $data = $response->json();
 
-            // Filter data berdasarkan rentang waktu (Januari 2024 ke atas)
-            $filteredData = array_filter($data, function ($item) {
-                $publishedDate = $item['cveMetadata']['datePublished'] ?? null;
-                if ($publishedDate) {
-                    $publishedTimestamp = strtotime($publishedDate);
-                    $startDateTimestamp = strtotime('2024-01-01');
-                    return $publishedTimestamp >= $startDateTimestamp;
-                }
-                return false;
-            });
+                // Filter data berdasarkan rentang waktu (Januari 2024 ke atas)
+                $filteredData = array_filter($data, function ($item) {
+                    $publishedDate = $item['cveMetadata']['datePublished'] ?? null;
+                    return $publishedDate && strtotime($publishedDate) >= strtotime('2024-01-01');
+                });
 
-            // Menyimpan data ke database jika data belum ada
-            foreach ($filteredData as $item) {
-                $cveId = $item['cveMetadata']['cveId'] ?? null;
-                $publishedAt = $item['cveMetadata']['datePublished'] ?? null;
+                // Simpan data ke database jika belum ada
+                foreach ($filteredData as $item) {
+                    $cveId = $item['cveMetadata']['cveId'] ?? null;
+                    $publishedAt = $item['cveMetadata']['datePublished'] ?? null;
 
-                if ($cveId && !Vulnerability::where('cve_id', $cveId)->exists()) {
-                    Vulnerability::create([
-                        'cve_id' => $cveId,
-                        'description' => $item['containers']['cna']['descriptions'][0]['value'] ?? 'No description available',
-                        'cvss_score' => $item['containers']['cna']['metrics'][0]['cvssV3_1']['baseScore'] ?? null,
-                        'published_at' => $publishedAt ? Carbon::parse($publishedAt)->format('Y-m-d H:i:s') : null,
-                        'detail_url' => "https://cve.mitre.org/cgi-bin/cvename.cgi?name=" . $cveId,
-                    ]);
+                    if ($cveId && !Vulnerability::where('cve_id', $cveId)->exists()) {
+                        Vulnerability::create([
+                            'cve_id' => $cveId,
+                            'description' => $item['containers']['cna']['descriptions'][0]['value'] ?? 'No description available',
+                            'cvss_score' => $item['containers']['cna']['metrics'][0]['cvssV3_1']['baseScore'] ?? null,
+                            'published_at' => $publishedAt ? Carbon::parse($publishedAt)->format('Y-m-d H:i:s') : null,
+                            'detail_url' => "https://cve.mitre.org/cgi-bin/cvename.cgi?name=" . $cveId,
+                        ]);
+                    }
                 }
             }
-
-            // Ambil data dari database
-            $vulnerabilities = Vulnerability::orderBy('published_at', 'desc')->get();
-
-            // Pisahkan data latest dan other
-            $latestVulnerabilities = $vulnerabilities->take(8); // Tampilkan 3 data terbaru
-            $otherVulnerabilities = $vulnerabilities->skip(8); // Sisanya adalah other vulnerabilities
-
-            // Kirim data ke view
-            return view('circl.index', compact('latestVulnerabilities', 'otherVulnerabilities'));
-        } else {
-            // Jika API gagal, tampilkan pesan error
-            return view('circl.index', [
-                'latestVulnerabilities' => [],
-                'otherVulnerabilities' => [],
-                'error' => 'Failed to fetch data from circl.lu API',
-            ]);
+        } catch (\Exception $e) {
+            // Jika terjadi error (termasuk timeout), tampilkan log error
+            Log::error('API Fetch Error: ' . $e->getMessage());
         }
+
+        // Ambil data dari database jika API gagal atau berhasil
+        $vulnerabilities = Vulnerability::orderBy('published_at', 'desc')->get();
+
+        // Pisahkan data latest dan other
+        $latestVulnerabilities = $vulnerabilities->take(8); // 8 data terbaru
+        $otherVulnerabilities = $vulnerabilities->skip(8); // Data lainnya
+
+        // Kirim data ke view
+        return view('circl.index', compact('latestVulnerabilities', 'otherVulnerabilities'));
     }
     // public function showDetail($cveId)
     // {

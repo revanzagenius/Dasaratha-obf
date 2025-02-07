@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\ShodanHost;
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -18,4 +19,10 @@ class Port extends Model
     {
         return $this->belongsTo(ShodanHost::class);
     }
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
 }

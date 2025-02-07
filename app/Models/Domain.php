@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Model;
 
 class Domain extends Model
@@ -17,5 +18,10 @@ class Domain extends Model
         'domain_status',
         'additional_info',
     ];
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
+    }
 
 }

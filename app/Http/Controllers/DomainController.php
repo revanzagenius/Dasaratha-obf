@@ -33,8 +33,8 @@ class DomainController extends Controller
 
         // Contoh pengambilan data subdomain
         $apiUrl = 'https://subdomains.whoisxmlapi.com/api/v1';
-        $apiKey = 'at_5SxsDTwFo6BS58R90Bi3pal5lg06t';
-        $domainName = 'obf.id';
+        $apiKey = '';
+        $domainName = 'sthree.co.id';
 
         $response = Http::get($apiUrl, [
             'apiKey' => $apiKey,
@@ -121,5 +121,13 @@ class DomainController extends Controller
 
         // Download file PDF
         return $pdf->download('domain_report.pdf');
+    }
+
+    public function organization(Request $request)
+    {
+        $organizationId = $request->input('organization_id'); // Dapatkan organisasi aktif
+        $domains = Domain::where('organization_id', $organizationId)->get();
+
+        return view('domain.domain', ['domains' => $domains]);
     }
 }

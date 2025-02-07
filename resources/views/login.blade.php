@@ -106,6 +106,15 @@
       <!-- Bagian Login -->
       <div class="col-md-4 login-section">
         <h2>Sign In</h2>
+
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                @foreach ($errors->all() as $error)
+                    <p>{{ $error }}</p>
+                @endforeach
+            </div>
+        @endif
+
         <form method="POST" action="{{ route('login.submit') }}">
             @csrf
             <div class="form-floating mb-3">

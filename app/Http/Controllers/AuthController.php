@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DB;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Domain;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -135,5 +136,14 @@ class AuthController extends Controller
 
         return view('login_logs.index', compact('logs', 'loginSummary'));
     }
+
+    public function organization(Request $request)
+    {
+        $organizationId = $request->input('organization_id'); // Dapatkan organisasi aktif
+        $domain = Domain::where('organization_id', $organizationId)->get();
+
+        return view('domain.domain', ['domain' => $domain]);
+    }
+
 
 }

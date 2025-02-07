@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Model;
 
 class DehashedResult extends Model
@@ -15,4 +16,10 @@ class DehashedResult extends Model
         'status',
         'last_scanned_at',
     ];
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
 }

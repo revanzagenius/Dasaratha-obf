@@ -80,17 +80,13 @@
                         <td class="px-6 py-4 countdown" data-expiry="{{ $domain->expiry_date }}"></td>
                         <td class="px-6 py-4">
                             <a href="{{ route('domains.downloadPdf') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Unduh PDF</a>
-                          <!-- Tombol Delete dengan Ikon X -->
-                            <!-- Tombol Delete -->
-                        <form action="{{ route('domains.destroy', $domain->id) }}" method="POST" class="inline-block">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
-                                onclick="return confirm('Are you sure you want to delete this domain?');">
-                                Delete
-                            </button>
-                        </form>
+                            <form action="{{ route('domains.destroy', $domain->id) }}" method="POST" class="inline-block">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2" onclick="return confirm('Are you sure you want to delete this domain?');">
+                                    Delete
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach
@@ -99,35 +95,123 @@
     </div>
 
     <!-- Domain List (Tabel yang menampilkan daftar domain) -->
-    <div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
-        <h3><b>SUB DOMAIN</b></h3>
-        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-2">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th scope="col" class="px-6 py-3">No</th>
-                    <th scope="col" class="px-6 py-3">Sub Domain</th>
-                    <th scope="col" class="px-6 py-3">First Seen</th>
-                    <th scope="col" class="px-6 py-3">Last Seen</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (!empty($subdomainRecords))
-                    @foreach ($subdomainRecords as $record)
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <td class="px-6 py-4">{{ $loop->iteration }}</td>
-                            <td class="px-6 py-4">{{ $record['domain'] }}</td>
-                            <td class="px-6 py-4">{{ date('Y-m-d H:i:s', $record['firstSeen']) }}</td>
-                            <td class="px-6 py-4">{{ date('Y-m-d H:i:s', $record['lastSeen']) }}</td>
-                        </tr>
-                    @endforeach
-                @else
-                    <tr>
-                        <td colspan="4" class="px-6 py-4 text-center">Tidak ada subdomain yang ditemukan</td>
-                    </tr>
-                @endif
-            </tbody>
-        </table>
-    </div>
+<div class="overflow-x-auto relative shadow-md sm:rounded-lg mt-5">
+    <h3><b>SUB DOMAIN</b></h3>
+    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mt-2">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">No</th>
+                <th scope="col" class="px-6 py-3">Sub Domain</th>
+                <th scope="col" class="px-6 py-3">First Seen</th>
+                <th scope="col" class="px-6 py-3">Last Seen</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-6 py-4">1</td>
+                <td class="px-6 py-4">cpcontacts.obf.id</td>
+                <td class="px-6 py-4">2020-08-11 09:31:43</td>
+                <td class="px-6 py-4">2020-08-11 09:31:43</td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-6 py-4">2</td>
+                <td class="px-6 py-4">obf-testing.obf.id</td>
+                <td class="px-6 py-4">2024-10-10 23:14:23</td>
+                <td class="px-6 py-4">2024-10-10 23:14:23</td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-6 py-4">3</td>
+                <td class="px-6 py-4">webdisk.obf.id</td>
+                <td class="px-6 py-4">2020-08-11 09:31:43</td>
+                <td class="px-6 py-4">2020-08-11 09:31:43</td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-6 py-4">4</td>
+                <td class="px-6 py-4">coll-warning.obf.id</td>
+                <td class="px-6 py-4">2024-12-07 06:20:11</td>
+                <td class="px-6 py-4">2024-12-07 06:20:11</td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-6 py-4">5</td>
+                <td class="px-6 py-4">digitaled.obf.id</td>
+                <td class="px-6 py-4">2024-05-06 12:01:47</td>
+                <td class="px-6 py-4">2024-06-01 13:59:03</td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-6 py-4">6</td>
+                <td class="px-6 py-4">www.pentest.obf.id</td>
+                <td class="px-6 py-4">2021-05-17 05:20:12</td>
+                <td class="px-6 py-4">2021-05-17 05:20:12</td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-6 py-4">7</td>
+                <td class="px-6 py-4">webmail.obf.id</td>
+                <td class="px-6 py-4">2020-08-11 09:31:43</td>
+                <td class="px-6 py-4">2020-08-11 09:31:43</td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-6 py-4">8</td>
+                <td class="px-6 py-4">www.digitalize.obf.id</td>
+                <td class="px-6 py-4">2024-01-06 02:30:21</td>
+                <td class="px-6 py-4">2024-01-06 02:30:21</td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-6 py-4">9</td>
+                <td class="px-6 py-4">mail.obf.id</td>
+                <td class="px-6 py-4">2020-04-26 10:07:05</td>
+                <td class="px-6 py-4">2020-04-26 10:07:05</td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-6 py-4">10</td>
+                <td class="px-6 py-4">www.testdigitalize.obf.id</td>
+                <td class="px-6 py-4">2024-05-15 11:07:27</td>
+                <td class="px-6 py-4">2025-01-15 01:06:20</td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-6 py-4">11</td>
+                <td class="px-6 py-4">pentest.obf.id</td>
+                <td class="px-6 py-4">2021-05-17 05:20:12</td>
+                <td class="px-6 py-4">2024-04-02 06:07:19</td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-6 py-4">12</td>
+                <td class="px-6 py-4">testdigitalize.obf.id</td>
+                <td class="px-6 py-4">2024-05-15 11:07:27</td>
+                <td class="px-6 py-4">2025-01-15 01:06:20</td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-6 py-4">13</td>
+                <td class="px-6 py-4">www.obf.id</td>
+                <td class="px-6 py-4">2020-08-11 09:31:43</td>
+                <td class="px-6 py-4">2024-12-25 06:41:43</td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-6 py-4">14</td>
+                <td class="px-6 py-4">cpcalendars.obf.id</td>
+                <td class="px-6 py-4">2020-08-11 09:31:43</td>
+                <td class="px-6 py-4">2020-08-11 09:31:43</td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-6 py-4">15</td>
+                <td class="px-6 py-4">digitalize.obf.id</td>
+                <td class="px-6 py-4">2023-06-16 09:55:03</td>
+                <td class="px-6 py-4">2024-01-06 02:30:21</td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-6 py-4">16</td>
+                <td class="px-6 py-4">cpanel.obf.id</td>
+                <td class="px-6 py-4">2020-08-11 09:31:43</td>
+                <td class="px-6 py-4">2020-08-11 09:31:43</td>
+            </tr>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="px-6 py-4">17</td>
+                <td class="px-6 py-4">svr1.obf.id</td>
+                <td class="px-6 py-4">2022-03-13 22:18:42</td>
+                <td class="px-6 py-4">2025-01-15 12:54:02</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 
 
