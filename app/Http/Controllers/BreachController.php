@@ -50,11 +50,14 @@ class BreachController extends Controller
             ];
         });
 
+        $latestData = $sortedData->first();
+        session(['latestData' => $latestData]);
         // Kirim data ke view
         return view('breaches.index', [
             'chartData' => $latestChartData->values(),
             'data' => $paginatedData,
             'search' => $search,
+            'latestData' =>$latestData,
         ]);
     }
 }

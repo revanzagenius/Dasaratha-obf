@@ -61,28 +61,19 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach ($vip_list as $vl )
                         <tr class="hover:bg-gray-100">
                             <td class="px-4 py-2 border-t border-gray-300">
-                                <span class="text-yellow-500 border border-yellow-500 px-2 py-1 rounded">EMAIL</span>
+                                <span class="text-yellow-500 border border-yellow-500 px-2 py-1 rounded">{{ $vl->type }}</span>
                             </td>
-                            <td class="px-4 py-2 border-t border-gray-300">KUNIAKI.TACHIKI@OBF.ID</td>
-                            <td class="px-4 py-2 border-t border-gray-300">24 DEC 2024</td>
-                            <td class="px-4 py-2 border-t border-gray-300">24 DEC 2024</td>
+                            <td class="px-4 py-2 border-t border-gray-300">{{ $vl->email }}</td>
+                            <td class="px-4 py-2 border-t border-gray-300">{{ $vl->created_at }}</td>
+                            <td class="px-4 py-2 border-t border-gray-300">{{ $vl->updated_at }}</td>
                             <td class="px-4 py-2 border-t border-gray-300">
-                                <span class="text-green-500 border border-green-500 px-2 py-1 rounded">RUNNING</span>
+                                <span class="text-green-500 border border-green-500 px-2 py-1 rounded">{{ $vl->status }}</span>
                             </td>
                         </tr>
-                        <tr class="hover:bg-gray-100">
-                            <td class="px-4 py-2 border-t border-gray-300">
-                                <span class="text-yellow-500 border border-yellow-500 px-2 py-1 rounded">EMAIL</span>
-                            </td>
-                            <td class="px-4 py-2 border-t border-gray-300">CHRISTIAN.TOK@OBF.ID</td>
-                            <td class="px-4 py-2 border-t border-gray-300">24 DEC 2024</td>
-                            <td class="px-4 py-2 border-t border-gray-300">24 DEC 2024</td>
-                            <td class="px-4 py-2 border-t border-gray-300">
-                                <span class="text-green-500 border border-green-500 px-2 py-1 rounded">RUNNING</span>
-                            </td>
-                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

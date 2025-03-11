@@ -9,7 +9,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($latestNews as $article)
                 <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
-                    <img src="{{ $article['urlToImage'] ?? 'https://via.placeholder.com/400x200?text=No+Image' }}"
+                    <img src="{{ $article['url_to_image'] ?? 'https://via.placeholder.com/400x200?text=No+Image' }}"
                         class="w-full h-48 object-cover" alt="News Image">
                     <div class="p-4 flex flex-col flex-grow">
                         <h5 class="text-lg font-semibold mb-2">{{ $article['title'] }}</h5>
@@ -27,7 +27,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($otherNews as $article)
                 <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
-                    <img src="{{ $article['urlToImage'] ?? 'https://via.placeholder.com/400x200?text=No+Image' }}"
+                    <img src="{{ $article['url_to_image'] ?? 'https://via.placeholder.com/400x200?text=No+Image' }}"
                         class="w-full h-48 object-cover" alt="News Image">
                     <div class="p-4 flex flex-col flex-grow">
                         <h5 class="text-lg font-semibold mb-2">{{ $article['title'] }}</h5>

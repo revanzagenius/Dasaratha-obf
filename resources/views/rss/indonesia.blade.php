@@ -21,7 +21,7 @@
                     @foreach ($latestEntries as $entry)
                     <tr class="hover:bg-gray-50">
                         <td class="px-4 py-2 border border-gray-200">{{ $entry['ip'] }}</td>
-                        <td class="px-4 py-2 border border-gray-200">{{ $entry['riskLevel'] }}</td>
+                        <td class="px-4 py-2 border border-gray-200">{{ $entry['risk_level'] }}</td>
                         <td class="px-4 py-2 border border-gray-200">{{ $entry['description'] }}</td>
                         <td class="px-4 py-2 border border-gray-200">
                             <a href="{{ $entry['url'] }}" target="_blank" class="text-blue-600 hover:underline">View Details</a>
@@ -51,7 +51,7 @@
                     @foreach ($otherEntries as $entry)
                     <tr class="hover:bg-gray-50">
                         <td class="px-4 py-2 border border-gray-200">{{ $entry['ip'] }}</td>
-                        <td class="px-4 py-2 border border-gray-200">{{ $entry['riskLevel'] }}</td>
+                        <td class="px-4 py-2 border border-gray-200">{{ $entry['risk_level'] }}</td>
                         <td class="px-4 py-2 border border-gray-200">{{ $entry['description'] }}</td>
                         <td class="px-4 py-2 border border-gray-200">
                             <a href="{{ $entry['url'] }}" target="_blank" class="text-blue-600 hover:underline">View Details</a>

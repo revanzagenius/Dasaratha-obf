@@ -4,10 +4,12 @@ use App\Mail\TestEmail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CVEController;
+use App\Http\Controllers\OTXController;
 use App\Http\Middleware\AuthMiddleware;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ScanController;
+use App\Http\Controllers\TweetController;
 use App\Http\Controllers\AnyrunController;
 use App\Http\Controllers\BreachController;
 use App\Http\Controllers\DomainController;
@@ -18,8 +20,10 @@ use App\Http\Controllers\RSSFeedController;
 use App\Http\Controllers\DeHashedController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TweetFeedController;
 use App\Http\Middleware\AutoLogoutMiddleware;
 use App\Http\Middleware\SingleSessionMiddleware;
+use App\Http\Controllers\MainDashboardController;
 
 Route::get('/', [AuthController::class, 'index'])->name('login.index');
 Route::post('/', [AuthController::class, 'login'])->name('login.submit');
@@ -38,7 +42,8 @@ Route::middleware([AuthMiddleware::class, AutoLogoutMiddleware::class, SingleSes
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.indexd');
 
     //NEWS
-    Route::get('/news', [NewsController::class, 'index'])->name('news.index');
+    Route::get('/news', [NewsController::class, 'index'])->name('news.index'); // Fetch dan simpan ke DB
+    // Route::get('/news/show', [NewsController::class, 'show'])->name('news.show'); // Tampilkan dari DB
     Route::get('/malware-trends', [NewsController::class, 'malware'])->name('malware.index');
     Route::get('/malware/{name}', [NewsController::class, 'detail'])->name('malware.detail');
     Route::get('/feeds', [NewsController::class, 'Feeds']);
@@ -94,7 +99,20 @@ Route::middleware([AuthMiddleware::class, AutoLogoutMiddleware::class, SingleSes
     Route::get('/breaches', [BreachController::class, 'index'])->name('breaches.index');
 
     Route::get('/passwords', [PasswordController::class, 'index'])->name('passwords.index');
+
+
+    Route::get('/tweet-feed/{category?}', [TweetFeedController::class, 'index'])->name('tweet.feed');
+
     // Route::post('/scan', [ScanController::class, 'storeScan'])->name('scan.store');
+
+    Route::get('/main-dashboard',[MainDashboardController::class, 'index'])->name('main-dashboard.index');
+
+    Route::get('/otx/pulses', [OTXController::class, 'index'])->name('otx.index');
+    Route::get('/otx/pulses/{id}/download', [OTXController::class, 'downloadPdf'])->name('otx.download');
+    Route::get('/otx/pulses/{id}', [OTXController::class, 'show'])->name('otx.show');
+
+    Route::get('/tweets', [TweetController::class, 'index'])->name('tweets.index');
+    Route::get('/tweets-dashboard', [TweetController::class, 'dashboard'])->name('tweets.dashboard');
 });
 
 Route::get('/send-email', function () {

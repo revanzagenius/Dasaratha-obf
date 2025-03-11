@@ -2,31 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HackerNews;
 use Illuminate\Http\Request;
+use App\Models\CyberSecurityNews;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use App\Services\NewsAPIService; // Gunakan NewsAPIService
 
 class NewsController extends Controller
 {
-    protected $newsService;
-
-    public function __construct(NewsAPIService $newsService)
-    {
-        $this->newsService = $newsService;
-    }
 
     public function index()
     {
-        // Ambil berita terbaru dan berita lainnya dari API
-        $news = $this->newsService->getLatestNews();
-
-        // Pisahkan berita menjadi dua kategori
-        $latestNews = array_slice($news['articles'], 0, 9); // Ambil 5 berita terbaru
-        $otherNews = array_slice($news['articles'], 5); // Berita lainnya
+        $latestNews = CyberSecurityNews::orderBy('published_at', 'desc')->take(9)->get();
+        $otherNews = CyberSecurityNews::orderBy('published_at', 'desc')->skip(9)->take(20)->get();
 
         return view('news', compact('latestNews', 'otherNews'));
     }
+
+    // public function show()
+    // {
+    //     $latestNews = CyberSecurityNews::orderBy('published_at', 'desc')->take(9)->get();
+    //     $otherNews = CyberSecurityNews::orderBy('published_at', 'desc')->skip(9)->take(20)->get();
+
+    //     return view('news', compact('latestNews', 'otherNews'));
+    // }
 
     public function malware()
     {
@@ -114,37 +114,14 @@ class NewsController extends Controller
     return view('feeds.index', ['feeds' => $feeds]);
 }
 
-public function hackernews()
-{
-    $feedUrl = 'https://feeds.feedburner.com/TheHackersNews';
+        public function hackernews()
+    {
+        $articles = HackerNews::orderBy('published_at', 'desc')->get();
 
-    // Ambil data dari RSS feed
-    $response = Http::get($feedUrl);
+        $latestNews = $articles->take(9);
+        $otherNews = $articles->slice(9);
 
-    if ($response->ok()) {
-        $xml = simplexml_load_string($response->body());
-
-        // Parsing data RSS menjadi array
-        $articles = [];
-        foreach ($xml->channel->item as $item) {
-            $articles[] = [
-                'title' => (string) $item->title,
-                'description' => (string) $item->description,
-                'url' => (string) $item->link,
-                'urlToImage' => (string) ($item->enclosure['url'] ?? null), // Beberapa feed mungkin memiliki gambar di enclosure
-                'pubDate' => (string) $item->pubDate,
-            ];
-        }
-
-        // Membagi data menjadi `latestNews` dan `otherNews`
-        $latestNews = array_slice($articles, 0, 9);
-        $otherNews = array_slice($articles, 9);
-
-        // Kirim data ke view
         return view('news.index', compact('latestNews', 'otherNews'));
     }
-
-    return back()->withErrors('Gagal mengambil data berita.');
-}
 
 }

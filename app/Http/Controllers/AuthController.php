@@ -17,7 +17,7 @@ class AuthController extends Controller
         return view('login');
     }
 
-     public function login(Request $request)
+    public function login(Request $request)
     {
         // Validasi input
         $request->validate([
@@ -27,7 +27,7 @@ class AuthController extends Controller
 
         // Cek kredensial
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            return redirect()->route('dashboard.indexd');
+            return redirect()->route('main-dashboard.index');
         }
 
         // Kembalikan ke halaman login dengan pesan error
