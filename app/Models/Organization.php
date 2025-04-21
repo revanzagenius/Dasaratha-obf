@@ -4,6 +4,7 @@ namespace App\Models;
 use App\Models\Port;
 use App\Models\User;
 use App\Models\Domain;
+use App\Models\ShodanHost;
 use App\Models\Vulnerability;
 use App\Models\DehashedResult;
 use Illuminate\Database\Eloquent\Model;
@@ -37,5 +38,9 @@ class Organization extends Model
         return $this->hasMany(DehashedResult::class);
     }
 
-    // Tambahkan relasi ke model lainnya sesuai kebutuhan.
+    public function shodanHosts()
+    {
+        return $this->hasMany(ShodanHost::class);
+    }
+
 }

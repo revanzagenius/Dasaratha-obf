@@ -66,9 +66,6 @@ class CVEController extends Controller
             }
         }
 
-
-
-
     public function opencve(Request $request)
 {
     $query = $request->input('query');

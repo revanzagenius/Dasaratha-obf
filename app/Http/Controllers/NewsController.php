@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\HackerNews;
 use Illuminate\Http\Request;
 use App\Models\CyberSecurityNews;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use App\Services\NewsAPIService; // Gunakan NewsAPIService
@@ -28,36 +30,95 @@ class NewsController extends Controller
     //     return view('news', compact('latestNews', 'otherNews'));
     // }
 
-    public function malware()
+    public function dashboard()
     {
-        // Membaca data dari file JSON
+        // Menghitung berita hari ini dari kedua sumber
+        $newsToday = CyberSecurityNews::where('published_at', '>=', now()->startOfDay())->count() +
+                    HackerNews::where('published_at', '>=', now()->startOfDay())->count();
+
+        // Menggabungkan kategori dari kedua sumber dan menghitung total per kategori
+        $topCategories = DB::table('cyber_security_news')
+        ->select('category', DB::raw('COUNT(*) as total'))
+        ->groupBy('category')
+        ->unionAll(
+            DB::table('hacker_news')
+                ->select('category', DB::raw('COUNT(*) as total'))
+                ->groupBy('category')
+        )
+        ->orderByDesc('total')
+        ->limit(10)
+        ->get();
+
+
+        // Mengambil kategori terbanyak
+        $topCategory = optional($topCategories->first())->category ?? 'No Data';
+
+
+        // Label dan Data untuk Chart
+        $topCategoriesLabels = $topCategories->pluck('category');
+        $topCategoriesData = $topCategories->pluck('total');
+
+        // Data untuk Word Cloud
+        $wordCloudData = $topCategories->map(fn ($item) => [$item->category, $item->total])->toArray();
+
+        // Mengambil sumber berita terbanyak dari kedua sumber
+        $topNewsSourceData = DB::table(function ($query) {
+            $query->select('url')
+                ->selectRaw('count(*) as total')
+                ->from('cyber_security_news')
+                ->groupBy('url')
+                ->unionAll(
+                    DB::table('hacker_news')
+                        ->select('url')
+                        ->selectRaw('count(*) as total')
+                        ->groupBy('url')
+                );
+        }, 'combined_sources')
+        ->select('url', DB::raw('SUM(total) as total'))
+        ->groupBy('url')
+        ->orderByDesc('total')
+        ->first();
+
+        $topNewsSource = $topNewsSourceData ? parse_url($topNewsSourceData->url, PHP_URL_HOST) : 'No Data';
+
+        return view('news-dashboard', compact(
+            'newsToday',
+            'topCategory',
+            'topCategoriesLabels',
+            'topCategoriesData',
+            'topNewsSource',
+            'wordCloudData'
+        ));
+    }
+
+    public function malwaredashboard()
+    {
         $json_data = file_get_contents(storage_path('app/malware_trends.json'));
+        $malware_data = json_decode($json_data, true) ?? [];
 
-        // Mengubah data JSON menjadi array
-        $malware_data = json_decode($json_data, true);
-
-        // Memeriksa jika data valid sebelum mengirimkan ke view
-        if ($malware_data === null) {
-            return view('malware')->with('malware_data', []);
-        }
-
-        // Menambahkan previous_rank untuk perbandingan
         foreach ($malware_data as &$malware) {
-            // Jika previous_rank tidak ada, set previous_rank ke nilai rank sebelumnya
-            if (!isset($malware['previous_rank'])) {
-                $malware['previous_rank'] = $malware['rank'];
-            }
+            $malware['previous_rank'] = $malware['previous_rank'] ?? $malware['rank'];
         }
 
-        // Mengurutkan data berdasarkan rank (peringkat)
-        usort($malware_data, function ($a, $b) {
-            return $a['rank'] <=> $b['rank'];
-        });
+        usort($malware_data, fn($a, $b) => $a['rank'] <=> $b['rank']);
 
-        // Menyimpan kembali data JSON setelah perbaikan
         file_put_contents(storage_path('app/malware_trends.json'), json_encode($malware_data, JSON_PRETTY_PRINT));
 
-        return view('malware')->with('malware_data', $malware_data);
+        return view('malware.dashboard', compact('malware_data'));
+    }
+
+    public function malware()
+    {
+        $json_data = file_get_contents(storage_path('app/malware_trends.json'));
+        $malware_data = json_decode($json_data, true) ?? [];
+
+        foreach ($malware_data as &$malware) {
+            $malware['previous_rank'] = $malware['previous_rank'] ?? $malware['rank'];
+        }
+
+        usort($malware_data, fn($a, $b) => $a['rank'] <=> $b['rank']);
+
+        return view('malware.list', compact('malware_data'));
     }
 
     public function detail($name)

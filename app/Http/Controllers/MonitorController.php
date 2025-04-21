@@ -119,8 +119,6 @@ class MonitorController extends Controller
         }
     }
 
-
-
     // Fungsi untuk menampilkan PDF
     public function exportPdf($id)
     {

@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<body class="bg-gray-100 p-4">
-    <div class="container mx-auto">
-        <h1 class="text-2xl font-bold mb-4 text-center">Latest Breach Data Visualization</h1>
+<body class="bg-gray-100  p-4">
+    <div class="container mx-auto mt-4">
 
         <!-- Chart Section in a Card -->
         <div class="bg-white shadow-md rounded-lg p-6 mb-8">

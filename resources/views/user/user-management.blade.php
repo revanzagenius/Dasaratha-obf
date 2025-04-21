@@ -20,6 +20,7 @@
                         <th class="px-4 py-2 border-b">Name</th>
                         <th class="px-4 py-2 border-b">Email</th>
                         <th class="px-4 py-2 border-b">Role</th>
+                        <th class="px-4 py-2 border-b">Organization</th>
                         <th class="px-4 py-2 border-b">Action</th>
                     </tr>
                 </thead>
@@ -30,6 +31,7 @@
                         <td class="px-4 py-2 border-b">{{ $user->name }}</td>
                         <td class="px-4 py-2 border-b">{{ $user->email }}</td>
                         <td class="px-4 py-2 border-b">{{ $user->role->name ?? 'No Role' }}</td>
+                        <td class="px-4 py-2 border-b">{{ $user->organization->name ?? 'No Organization' }}</td>
                         <td class="px-4 py-2 border-b">
                             <a href="{{ route('user.edit', $user->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Edit</a>
                             <!-- Form untuk delete user -->
@@ -47,40 +49,47 @@
     </div>
 
     <!-- Modal untuk menambah/edit user -->
-<div id="userModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full"> <!-- Mengubah max-w-lg menjadi max-w-md -->
-        <h3 class="text-xl font-semibold text-gray-800 mb-4" id="modalTitle">Tambah User</h3>
+    <div id="userModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4" id="modalTitle">Tambah User</h3>
 
-        <form action="{{ route('user.store') }}" method="POST">
-            @csrf
-            <div class="mb-4">
-                <label for="name" class="block text-gray-600">Name</label>
-                <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-            </div>
-            <div class="mb-4">
-                <label for="email" class="block text-gray-600">Email</label>
-                <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-            </div>
-            <div class="mb-4">
-                <label for="password" class="block text-gray-600">Password</label>
-                <input type="password" id="password" name="password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-            </div>
-            <div class="mb-4">
-                <label for="role" class="block text-gray-600">Role</label>
-                <select id="role" name="role" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    @foreach ($roles as $role)
-                        <option value="{{ $role->id }}">{{ $role->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="flex justify-end">
-                <button type="button" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400" id="closeModalBtn">Batal</button>
-                <button type="submit" class="ml-4 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Simpan</button>
-            </div>
-        </form>
+            <form action="{{ route('user.store') }}" method="POST">
+                @csrf
+                <div class="mb-4">
+                    <label for="name" class="block text-gray-600">Name</label>
+                    <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-gray-600">Email</label>
+                    <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="block text-gray-600">Password</label>
+                    <input type="password" id="password" name="password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label for="role" class="block text-gray-600">Role</label>
+                    <select id="role" name="role" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        @foreach ($roles as $role)
+                            <option value="{{ $role->id }}">{{ $role->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="organization" class="block text-gray-600">Organization</label>
+                    <select id="organization" name="organization" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        @foreach ($organizations as $organization)
+                            <option value="{{ $organization->id }}">{{ $organization->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400" id="closeModalBtn">Batal</button>
+                    <button type="submit" class="ml-4 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Simpan</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
 
     <script>
         // Script untuk modal

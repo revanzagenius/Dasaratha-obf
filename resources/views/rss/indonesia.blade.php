@@ -26,7 +26,7 @@
                         <td class="px-4 py-2 border border-gray-200">
                             <a href="{{ $entry['url'] }}" target="_blank" class="text-blue-600 hover:underline">View Details</a>
                         </td>
-                        <td class="px-4 py-2 border border-gray-200">{{ $entry['pubDate'] }}</td>
+                        <td class="px-4 py-2 border border-gray-200">{{ $entry['reported_at'] }}</td>
                     </tr>
                     @endforeach
                 </tbody>

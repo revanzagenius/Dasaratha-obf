@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Domain;
+use App\Models\Subdomain;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Services\WhoisAPIService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class DomainController extends Controller
@@ -26,30 +28,14 @@ class DomainController extends Controller
         return redirect()->back()->with('success', 'Domain deleted successfully.');
     }
 
-    // Method untuk menampilkan daftar domain
     public function index()
     {
         $domains = Domain::all();
+        $records = Subdomain::all();
 
-        // Contoh pengambilan data subdomain
-        $apiUrl = 'https://subdomains.whoisxmlapi.com/api/v1';
-        $apiKey = '';
-        $domainName = 'sthree.co.id';
-
-        $response = Http::get($apiUrl, [
-            'apiKey' => $apiKey,
-            'domainName' => $domainName,
-        ]);
-
-        $subdomainRecords = $response->successful()
-            ? $response->json()['result']['records'] ?? []
-            : [];
-
-        return view('domain.domain', compact('domains', 'subdomainRecords'));
+        return view('domain.domain', compact('domains', 'records'));
     }
 
-
-    // Method untuk menambahkan dan menyimpan data domain
     public function fetchAndStoreDomainData(Request $request)
     {
         $request->validate([
@@ -73,6 +59,7 @@ class DomainController extends Controller
                     'name_servers' => json_encode($registryData['nameServers']['hostNames'] ?? []),
                     'domain_status' => $registryData['status'] ?? null,
                     'additional_info' => json_encode($domainData), // Simpan data mentah untuk referensi
+                    'organization_id' => Auth::user()->organization_id, // Ambil dari user yang login
                 ]
             );
 
@@ -82,34 +69,34 @@ class DomainController extends Controller
         return redirect()->back()->with('error', 'Gagal mengambil data domain.');
     }
 
-    public function subdomain()
-    {
-            // URL API dengan domain yang diinginkan
-            $apiUrl = 'https://subdomains.whoisxmlapi.com/api/v1';
-            $apiKey = 'at_5SxsDTwFo6BS58R90Bi3pal5lg06t';
-            $domainName = 'obf.id';
+    // public function subdomain()
+    // {
+    //         // URL API dengan domain yang diinginkan
+    //         $apiUrl = 'https://subdomains.whoisxmlapi.com/api/v1';
+    //         $apiKey = 'at_5SxsDTwFo6BS58R90Bi3pal5lg06t';
+    //         $domainName = 'obf.id';
 
-            // Panggil API menggunakan Facade HTTP
-            $response = Http::get($apiUrl, [
-                'apiKey' => $apiKey,
-                'domainName' => $domainName,
-            ]);
+    //         // Panggil API menggunakan Facade HTTP
+    //         $response = Http::get($apiUrl, [
+    //             'apiKey' => $apiKey,
+    //             'domainName' => $domainName,
+    //         ]);
 
-            // Periksa apakah respons berhasil
-            if ($response->successful()) {
-                // Parse data JSON dari API
-                $data = $response->json();
+    //         // Periksa apakah respons berhasil
+    //         if ($response->successful()) {
+    //             // Parse data JSON dari API
+    //             $data = $response->json();
 
-                // Kirim data ke view untuk ditampilkan
-                return view('domain.subdomain', [
-                    'search' => $data['search'] ?? null,
-                    'records' => $data['result']['records'] ?? [],
-                ]);
-            }
+    //             // Kirim data ke view untuk ditampilkan
+    //             return view('domain.subdomain', [
+    //                 'search' => $data['search'] ?? null,
+    //                 'records' => $data['result']['records'] ?? [],
+    //             ]);
+    //         }
 
-            // Jika gagal, kembalikan error
-            return back()->withErrors('Gagal mendapatkan data subdomain dari API.');
-    }
+    //         // Jika gagal, kembalikan error
+    //         return back()->withErrors('Gagal mendapatkan data subdomain dari API.');
+    // }
 
     // Method untuk download PDF
     public function downloadPdf()

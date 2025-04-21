@@ -4,6 +4,7 @@
 namespace App\Models;
 
 use App\Models\Port;
+use App\Models\Organization;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -14,7 +15,7 @@ class ShodanHost extends Model
     protected $fillable = [
         'ip', 'hostnames', 'country', 'city', 'ports', 'vulns',
         'isp', 'domains', 'organization', 'asn', 'service_banners',
-        'email', 'latitude', 'longitude', // Tambahkan di sini
+        'email', 'latitude', 'longitude', 'organization_id', // Tambahkan di sini
     ];
 
     protected $casts = [
@@ -31,5 +32,10 @@ class ShodanHost extends Model
     public function ports()
     {
         return $this->hasMany(Port::class);
+    }
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
     }
 }

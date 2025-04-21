@@ -32,8 +32,8 @@
         <!-- Scan Form Section -->
         <div class="mb-8">
             @if(auth()->user()->role_id == 1)
-                <button 
-                    class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150" 
+                <button
+                    class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150"
                     id="toggleFormButton"
                     title="Add new scan">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,9 +51,9 @@
                             <div>
                                 <label for="ip" class="block text-sm font-medium text-slate-700 mb-1">IP Address</label>
                                 <div class="relative rounded-md shadow-sm">
-                                    <input 
-                                        type="text" 
-                                        name="ip" 
+                                    <input
+                                        type="text"
+                                        name="ip"
                                         id="ip"
                                         class="block w-full rounded-md border-slate-200 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                         placeholder="Enter IP address to scan"
@@ -64,9 +64,9 @@
                             <div>
                                 <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Notification Email</label>
                                 <div class="relative rounded-md shadow-sm">
-                                    <input 
-                                        type="email" 
-                                        name="email" 
+                                    <input
+                                        type="email"
+                                        name="email"
                                         id="email"
                                         class="block w-full rounded-md border-slate-200 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                         placeholder="Enter email for notifications"
@@ -76,7 +76,7 @@
                         </div>
 
                         <div class="flex justify-end">
-                            <button 
+                            <button
                                 type="submit"
                                 class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                 Start Scan
@@ -105,7 +105,7 @@
                             <form action="{{ route('hosts.destroy', $host->id) }}" method="POST" class="absolute top-4 right-4">
                                 @csrf
                                 @method('DELETE')
-                                <button 
+                                <button
                                     type="submit"
                                     class="p-1 rounded-full hover:bg-slate-100 text-slate-400 hover:text-red-500 transition-colors duration-150"
                                     onclick="return confirm('Are you sure you want to delete this scan?');">
@@ -131,7 +131,7 @@
                                         <dt class="text-sm font-medium text-slate-500">City</dt>
                                         <dd class="text-sm text-slate-900">{{ $host->city }}</dd>
                                     </div>
-                                    <div>
+                                    {{-- <div>
                                         <dt class="text-sm font-medium text-slate-500 mb-1">Open Ports</dt>
                                         <dd class="text-sm text-slate-900">
                                             @php
@@ -139,7 +139,7 @@
                                                 echo is_array($ports) ? implode(', ', $ports) : 'N/A';
                                             @endphp
                                         </dd>
-                                    </div>
+                                    </div> --}}
                                 </dl>
                             </div>
 

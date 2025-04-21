@@ -17,5 +17,6 @@ class CyberSecurityNews extends Model
         'url',
         'url_to_image',
         'published_at',
+        'category',
     ];
 }

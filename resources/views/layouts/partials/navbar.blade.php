@@ -30,6 +30,7 @@
                         <span class="sr-only">Open user menu</span>
                         <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo">
                     </button>
+
                     <div class="absolute right-0 z-50 hidden mt-2 text-base bg-white border border-gray-100 rounded-lg shadow-lg dark:bg-gray-700 dark:border-gray-600 min-w-[200px]"
                         id="dropdown-user">
                         <ul class="py-2" role="none">
@@ -54,20 +55,20 @@
     aria-label="Sidebar">
     <div class="h-full px-3 pb-4 overflow-y-auto bg-transparent mt-7">
         <ul class="space-y-2 font-medium">
-            {{-- Main Dashboard --}}
+            {{-- Main Dashboard
             <li>
                 <a href="{{ route('main-dashboard.index') }}"
                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group transition-all duration-200 {{ $currentRoute === 'threats.index' ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
                     <span class="flex-1 ms-3 font-thin text-sm whitespace-nowrap">Dashboard</span>
                 </a>
-            </li>
+            </li> --}}
 
             {{-- Attack Surface Section --}}
             <li>
                 <button type="button"
                     class="flex items-center w-full p-2 text-gray-900 transition-all duration-200 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                     aria-controls="dropdown-dashboard" data-collapse-toggle="dropdown-dashboard">
-                    <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap font-thin text-sm">Attack Surface</span>
+                    <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap font-thin text-sm">Dashboard</span>
                     <svg class="w-3 h-3 transition-transform duration-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
@@ -96,16 +97,44 @@
                 </ul>
             </li>
 
-            {{-- Data Breach Section --}}
             <li>
                 <a href="{{ route('databreach.index') }}"
                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group transition-all duration-200 {{ $currentRoute === 'databreach.index' ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
-                    <span class="flex-1 ms-3 font-thin text-sm whitespace-nowrap">VIP Monitoring</span>
+                    <span class="flex-1 ms-3 font-thin text-sm whitespace-nowrap">Data Breach Monitoring</span>
                 </a>
             </li>
 
+
+            {{-- Data Breach Section --}}
+            {{-- <li>
+                <button type="button"
+                    class="flex items-center w-full p-2 text-gray-900 transition-all duration-200 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                    aria-controls="dropdown-VIP" data-collapse-toggle="dropdown-VIP">
+                    <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap font-thin text-sm">VIP Monitoring</span>
+                    <svg class="w-3 h-3 transition-transform duration-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 10 6">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                            d="m1 1 4 4 4-4" />
+                    </svg>
+                </button>
+                <ul id="dropdown-VIP" class="hidden py-2 space-y-1">
+                    <li>
+                        <a href="{{ route('vip-impersonate.index') }}"
+                            class="flex items-center w-full p-2 text-sm text-gray-900 font-thin text-sm transition-all duration-200 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 {{ $currentRoute === 'brand-monitoring.dashboard' ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
+                            VIP Impersonate Monitoring
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('databreach.index') }}"
+                            class="flex items-center w-full p-2 text-sm text-gray-900 font-thin text-sm transition-all duration-200 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 {{ $currentRoute === 'tweets.index' ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
+                            VIP Monitoring
+                        </a>
+                    </li>
+                </ul>
+            </li> --}}
+
              {{-- CVE Database Section --}}
-             <li>
+             {{-- <li>
                 <button type="button"
                     class="flex items-center w-full p-2 text-gray-900 transition-all duration-200 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                     aria-controls="dropdown-twitter" data-collapse-toggle="dropdown-twitter">
@@ -118,19 +147,19 @@
                 </button>
                 <ul id="dropdown-twitter" class="hidden py-2 space-y-1">
                     <li>
-                        <a href="{{ route('tweets.dashboard') }}"
-                            class="flex items-center w-full p-2 text-sm text-gray-900 font-thin text-sm transition-all duration-200 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 {{ $currentRoute === 'vulndashboard.index' ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
+                        <a href="{{ route('brand-monitoring.dashboard') }}"
+                            class="flex items-center w-full p-2 text-sm text-gray-900 font-thin text-sm transition-all duration-200 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 {{ $currentRoute === 'brand-monitoring.dashboard' ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
                             Brand Dashboard
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('tweets.index') }}"
-                            class="flex items-center w-full p-2 text-sm text-gray-900 font-thin text-sm transition-all duration-200 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 {{ $currentRoute === 'opencve.index' ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
-                            Brand Twitter
+                            class="flex items-center w-full p-2 text-sm text-gray-900 font-thin text-sm transition-all duration-200 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 {{ $currentRoute === 'tweets.index' ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
+                            Brand X Mentions
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
 
             {{-- CVE Database Section --}}
             <li>
@@ -161,23 +190,23 @@
             </li>
 
             {{-- Global Breach Information --}}
-            <li>
+            {{-- <li>
                 <a href="{{ route('breaches.index') }}"
                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group transition-all duration-200 {{ $currentRoute === 'breaches.index' ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
                     <span class="flex-1 ms-3 font-thin text-sm whitespace-nowrap">Global Breach Information</span>
                 </a>
-            </li>
+            </li> --}}
 
             {{-- Password Breach Database --}}
-            <li>
+            {{-- <li>
                 <a href="{{ route('passwords.index') }}"
-                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group transition-all duration-200">
+                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group transition-all duration-200 {{ $currentRoute === 'passwords.index' ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
                     <span class="flex-1 ms-3 font-thin text-sm whitespace-nowrap">Passwords Breach Database</span>
                 </a>
-            </li>
+            </li> --}}
 
             {{-- Global IP Spam Section --}}
-            <li>
+            {{-- <li>
                 <button type="button"
                     class="flex items-center w-full p-2 text-gray-900 transition-all duration-200 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                     aria-controls="dropdown-ips" data-collapse-toggle="dropdown-ips">
@@ -202,14 +231,33 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
 
-            {{-- Malware Hunting --}}
             <li>
-                <a href="{{ route('malware.index') }}"
-                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group transition-all duration-200">
-                    <span class="flex-1 ms-3 font-thin text-sm whitespace-nowrap">Malware Hunting</span>
-                </a>
+                <button type="button"
+                    class="flex items-center w-full p-2 text-gray-900 transition-all duration-200 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                    aria-controls="dropdown-Malware" data-collapse-toggle="dropdown-Malware">
+                    <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap font-thin text-sm">Malware Database</span>
+                    <svg class="w-3 h-3 transition-transform duration-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 10 6">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                            d="m1 1 4 4 4-4" />
+                    </svg>
+                </button>
+                <ul id="dropdown-Malware" class="hidden py-2 space-y-1">
+                    <li>
+                        <a href="{{ route('malware.dashboard') }}"
+                            class="flex items-center w-full p-2 text-sm text-gray-900 font-thin text-sm transition-all duration-200 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 {{ $currentRoute === 'malware.dashboard' ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
+                            Malware Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('malware.index') }}"
+                            class="flex items-center w-full p-2 text-sm text-gray-900 font-thin text-sm transition-all duration-200 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 {{ $currentRoute === 'malware.index' ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
+                            Malware Hunting
+                        </a>
+                    </li>
+                </ul>
             </li>
 
             {{-- Threat Actor --}}
@@ -219,19 +267,19 @@
                     <span class="flex-1 ms-3 font-thin text-sm whitespace-nowrap">Threat Actor</span>
                 </a>
             </li>
-            <li>
+            {{-- <li>
                 <a href="{{ route('tweet.feed') }}"
                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group transition-all duration-200 {{ $currentRoute === 'threats.index' ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
                     <span class="flex-1 ms-3 font-thin text-sm whitespace-nowrap">Threat Feed</span>
                 </a>
-            </li>
+            </li> --}}
 
             {{-- Web Scraping OSINT Section --}}
             <li>
                 <button type="button"
                     class="flex items-center w-full p-2 text-gray-900 transition-all duration-200 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                     aria-controls="dropdown-news" data-collapse-toggle="dropdown-news">
-                    <span class="flex-1 ms-3 text-left rtl:text-right font-thin text-sm whitespace-nowrap">Web Scraping OSINT</span>
+                    <span class="flex-1 ms-3 text-left rtl:text-right font-thin text-sm whitespace-nowrap">News</span>
                     <svg class="w-3 h-3 transition-transform duration-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
@@ -239,12 +287,6 @@
                     </svg>
                 </button>
                 <ul id="dropdown-news" class="hidden py-2 space-y-1">
-                    <li>
-                        <a href="{{ route('news.index') }}"
-                            class="flex items-center w-full p-2 text-sm text-gray-900 font-thin text-sm transition-all duration-200 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 {{ $currentRoute === 'news.index' ? 'bg-gray-100 dark:bg-gray-700' : '' }}">
-                            CyberSecurity News
-                        </a>
-                    </li>
                     <li>
                         <a href="{{ route('hackernews') }}"
                             class="flex items-center w-full p-2 text-sm text-gray-900 font-thin text-sm transition-all duration-200 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 {{ $currentRoute === 'hackernews' ? 'bg-gray-100 dark:bg-gray-700' : '' }}">

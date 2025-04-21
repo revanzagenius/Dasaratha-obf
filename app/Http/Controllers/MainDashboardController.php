@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Breach;
 use App\Models\HackerNews;
 use App\Models\ShodanHost;
+use App\Models\BreachRecord;
 use Illuminate\Http\Request;
 use App\Models\Vulnerability;
 use App\Models\DehashedResult;
@@ -191,38 +192,33 @@ class MainDashboardController extends Controller
         $allThreatGroups = $threatGroups;
         $totalThreatGroups = $threatGroups->count();
 
-        // Global Data Breach
+        // Global Data Breach (pakai DB)
         $search = $request->query('search');
 
+        $query = BreachRecord::query();
+
         if ($search) {
-            $response = Http::get("https://haveibeenpwned.com/api/v3/breach/{$search}");
-
-            if ($response->status() === 404) {
-                return back()->withErrors(['search' => 'Data breach not found.']);
-            }
-
-            $data = collect([$response->json()]);
-        } else {
-            $response = Http::get('https://haveibeenpwned.com/api/v3/breaches');
-            $data = collect($response->json());
+            $query->where('Title', 'like', "%{$search}%")
+                ->orWhere('Name', 'like', "%{$search}%");
         }
 
-        $sortedData = $data->sortByDesc(function ($item) {
-            return strtotime($item['BreachDate']);
-        });
+        $sortedData = $query->orderByDesc('BreachDate')->get();
 
+        // Pagination
         $perPage = 5;
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $currentItems = $sortedData->slice(($currentPage - 1) * $perPage, $perPage);
         $paginatedData = new LengthAwarePaginator($currentItems, $sortedData->count(), $perPage);
         $paginatedData->setPath($request->url());
 
+        // Chart Data (10 terbaru)
         $latestChartData = $sortedData->take(10)->map(function ($item) {
             return [
-                'title' => $item['Title'],
-                'count' => $item['PwnCount'],
+                'title' => $item->Title,
+                'count' => $item->PwnCount,
             ];
         });
+
         $totalDataCount = $sortedData->count();
         $chartData = $latestChartData->values();
 

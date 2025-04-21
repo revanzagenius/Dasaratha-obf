@@ -38,8 +38,8 @@ class DashboardController extends Controller
         // Hitung jumlah email yang ter-ekspos
         $dataExposeCount = DehashedResult::whereNotNull('email')->count();
 
-        // Ambil data Ports dan Vulnerabilities
-        $shodanHosts = ShodanHost::select('ports', 'vulns')->get();
+         // Ambil data Ports dan Vulnerabilities
+        $shodanHosts = ShodanHost::select('ip', 'hostnames', 'ports', 'vulns')->get();
 
         // Hitung jumlah ports dan vulnerabilities
         $totalPorts = $shodanHosts->reduce(fn($carry, $host) => $carry + count(json_decode($host->ports, true) ?? []), 0);
@@ -56,7 +56,8 @@ class DashboardController extends Controller
             'locations',
             'dataExposeCount',
             'totalPorts', // Total ports untuk chart
-            'totalVulns'  // Total vulnerabilities untuk chart
+            'totalVulns',  // Total vulnerabilities untuk chart
+            'shodanHosts'  // Pastikan ini dikirim ke view
         ));
     }
 

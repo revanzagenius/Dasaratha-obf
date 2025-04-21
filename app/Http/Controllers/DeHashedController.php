@@ -18,7 +18,6 @@ class DeHashedController extends Controller
         $data = $this->search($domain);
         $vip_list = Breach::all();
 
-
         // Mengambil semua data dan memastikan 'updated_at' adalah objek Carbon
         $allData = DehashedResult::all()->map(function ($entry) {
             $entry->updated_at = Carbon::parse($entry->updated_at); // Konversi ke objek Carbon
@@ -41,33 +40,35 @@ class DeHashedController extends Controller
     {
         $lastScan = DehashedResult::where('domain', $domain)->latest()->first();
 
-        // Jika sudah dipindai dalam 24 jam terakhir, jangan lakukan scan lagi
         if ($lastScan && $lastScan->last_scanned_at) {
-            // Pastikan last_scanned_at adalah objek Carbon
             $lastScannedAt = Carbon::parse($lastScan->last_scanned_at);
 
             if ($lastScannedAt->isToday()) {
-                return []; // Return empty jika sudah dipindai hari ini
+                return [];
             }
 
-            // Jika sudah lebih dari 24 jam, lakukan scan lagi
             if ($lastScannedAt->diffInDays(Carbon::now()) < 1) {
-                return []; // Tidak melakukan scan jika sudah dipindai dalam 24 jam terakhir
+                return [];
             }
         }
 
-        // Lanjutkan dengan proses pemindaian jika belum dipindai hari ini
-        $url = 'https://api.dehashed.com/search';
+        $url = 'https://api.dehashed.com/v2/search';
         $query = 'domain:' . $domain;
-        $username = env('DEHASHED_USERNAME');
-        $password = env('DEHASHED_PASSWORD');
 
-        // Send HTTP GET request
-        $response = Http::withBasicAuth($username, $password)
-            ->accept('application/json')
-            ->get($url, [
-                'query' => $query,
-            ]);
+        $apiKey = env('DEHASHED_API_KEY');
+
+        // Kirim POST request ke Dehashed v2
+        $response = Http::withHeaders([
+            'Dehashed-Api-Key' => $apiKey,
+            'Content-Type' => 'application/json',
+        ])->post($url, [
+            'query' => $domain, // Misalnya: 'bri.co.id'
+            'page' => 1,
+            'size' => 100,
+            'regex' => false,
+            'wildcard' => false,
+            'de_dupe' => false
+        ]);
 
         if ($response->successful()) {
             $data = $response->json();
@@ -76,11 +77,11 @@ class DeHashedController extends Controller
                 foreach ($data['entries'] as $entry) {
                     DehashedResult::create([
                         'domain' => $domain,
-                        'username' => $entry['username'] ?? null,
-                        'email' => $entry['email'] ?? null,
-                        'password' => $entry['password'] ?? null,
+                        'username' => $entry['username'][0] ?? null,
+                        'email' => $entry['email'][0] ?? null,
+                        'password' => $entry['password'][0] ?? null,
                         'status' => 'found',
-                        'last_scanned_at' => now(), // Set waktu pemindaian
+                        'last_scanned_at' => now(),
                     ]);
                 }
             } else {
@@ -90,14 +91,14 @@ class DeHashedController extends Controller
                     'email' => null,
                     'password' => null,
                     'status' => 'null',
-                    'last_scanned_at' => now(), // Set waktu pemindaian
+                    'last_scanned_at' => now(),
                 ]);
             }
 
             return $data;
         }
 
-        Log::error('API request failed for domain: ' . $domain);
+        Log::error('API request failed for domain: ' . $domain . ' | Response: ' . $response->body());
         return null;
     }
 }

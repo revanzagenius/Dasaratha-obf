@@ -31,6 +31,9 @@ class FetchCyberSecurityNews extends Command
                 CyberSecurityNews::updateOrCreate(['url' => $newsData['url']], $newsData);
             }
 
+            // Panggil script klasifikasi setelah data diambil
+            exec('python storage/scripts/classify_news.py');
+
             $this->info('Cyber Security News updated successfully.');
         } else {
             $this->error('Failed to fetch Cyber Security News.');

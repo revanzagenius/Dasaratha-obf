@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Models\Domain;
 use App\Models\ActivityLog;
+use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -27,7 +28,7 @@ class AuthController extends Controller
 
         // Cek kredensial
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            return redirect()->route('main-dashboard.index');
+            return redirect()->route('dashboard.indexd');
         }
 
         // Kembalikan ke halaman login dengan pesan error
@@ -50,13 +51,16 @@ class AuthController extends Controller
 
     public function Usermanagement()
     {
-        // Mengambil semua data user dengan relasi role
-        $users = User::with('role')->get(); // Memanggil relasi role pada user
+        // Mengambil semua data user dengan relasi role dan organization
+        $users = User::with(['role', 'organization'])->get();
 
         // Mengambil semua role untuk menampilkan dropdown pilihan role
         $roles = Role::all();
 
-        return view('user.user-management', compact('users', 'roles')); // Mengirim data ke view
+        // Mengambil semua organisasi untuk dropdown
+        $organizations = Organization::all();
+
+        return view('user.user-management', compact('users', 'roles', 'organizations')); // Mengirim data ke view
     }
 
     public function store(Request $request)
@@ -66,6 +70,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'role_id' => $request->role,
+            'organization_id' => $request->organization, // Tambahkan ini
         ]);
 
         return redirect()->back()->with('success', 'User berhasil ditambahkan.');

@@ -46,7 +46,7 @@
     @endif
 
     <!-- Add Domain Modal -->
-    <div id="addDomainModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
+    <div id="addDomainModal" tabindex="-1" aria-hidden="true" class="mt-5 fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
         <div class="relative w-full max-w-md mx-auto">
             <div class="relative bg-white rounded-xl shadow-lg">
                 <div class="flex items-center justify-between p-5 border-b">
@@ -73,199 +73,112 @@
         </div>
     </div>
 
-    <!-- Domain List -->
-    <div class="space-y-6">
-        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-lg font-semibold text-gray-900">DOMAIN</h2>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Domain Name</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expiry Date</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Registrar</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created Date</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Updated Date</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name Servers</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Countdown</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach ($domains as $domain)
-                            <tr class="hover:bg-gray-50 transition-colors duration-200">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $domain->domain_name }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $domain->expiry_date }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $domain->registrar_name }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $domain->created_date }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $domain->updated_date }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-900">
-                                    <ul class="list-disc pl-5 space-y-1">
-                                        @foreach (json_decode($domain->name_servers, true) as $nameServer)
-                                            <li>{{ $nameServer }}</li>
-                                        @endforeach
-                                    </ul>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $domain->domain_status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                        {{ $domain->domain_status }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm countdown" data-expiry="{{ $domain->expiry_date }}"></td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                                    <a href="{{ route('domains.downloadPdf') }}" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
-                                        <svg class="mr-1.5 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                                        </svg>
-                                        PDF
-                                    </a>
-                                    <form action="{{ route('domains.destroy', $domain->id) }}" method="POST" class="inline-block">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200" onclick="return confirm('Are you sure you want to delete this domain?');">
-                                            <svg class="mr-1.5 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                            </svg>
-                                            Delete
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+<!-- Domain List -->
+<div class="space-y-6">
+    <!-- Domain Table -->
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="px-6 py-4 bg-gray-100 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Domain Information</h2>
         </div>
-
-        <!-- Sub Domain List -->
-        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-lg font-semibold text-gray-900">SUB DOMAIN</h2>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sub Domain</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">First Seen</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Seen</th>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        @foreach (['Domain Name', 'Expiry Date', 'Registrar', 'Created Date', 'Updated Date', 'Name Servers', 'Status', 'Countdown', 'Action'] as $header)
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                {{ $header }}
+                            </th>
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach ($domains as $domain)
+                        <tr class="hover:bg-gray-50 transition duration-200">
+                            <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $domain->domain_name }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ $domain->expiry_date }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ $domain->registrar_name }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ $domain->created_date }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ $domain->updated_date }}</td>
+                            <td class="px-6 py-4 text-sm">
+                                <ul class="list-disc pl-5 space-y-1">
+                                    @foreach (json_decode($domain->name_servers, true) as $nameServer)
+                                        <li class="text-gray-700">{{ $nameServer }}</li>
+                                    @endforeach
+                                </ul>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 inline-flex text-xs font-semibold rounded-full
+                                    {{ $domain->domain_status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                    {{ ucfirst($domain->domain_status) }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm countdown text-gray-700" data-expiry="{{ $domain->expiry_date }}"></td>
+                            <td class="px-6 py-4 text-sm space-x-2 flex">
+                                <a href="{{ route('domains.downloadPdf') }}"
+                                    class="inline-flex items-center px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded-md hover:bg-indigo-700 transition">
+                                    <svg class="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                    PDF
+                                </a>
+                                <form action="{{ route('domains.destroy', $domain->id) }}" method="POST" class="inline-block">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="inline-flex items-center px-3 py-1.5 bg-red-600 text-white text-xs font-medium rounded-md hover:bg-red-700 transition"
+                                        onclick="return confirm('Are you sure you want to delete this domain?');">
+                                        <svg class="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <tbody>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">1</td>
-                                <td class="px-6 py-4">cpcontacts.obf.id</td>
-                                <td class="px-6 py-4">2020-08-11 09:31:43</td>
-                                <td class="px-6 py-4">2020-08-11 09:31:43</td>
-                            </tr>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">2</td>
-                                <td class="px-6 py-4">obf-testing.obf.id</td>
-                                <td class="px-6 py-4">2024-10-10 23:14:23</td>
-                                <td class="px-6 py-4">2024-10-10 23:14:23</td>
-                            </tr>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">3</td>
-                                <td class="px-6 py-4">webdisk.obf.id</td>
-                                <td class="px-6 py-4">2020-08-11 09:31:43</td>
-                                <td class="px-6 py-4">2020-08-11 09:31:43</td>
-                            </tr>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">4</td>
-                                <td class="px-6 py-4">coll-warning.obf.id</td>
-                                <td class="px-6 py-4">2024-12-07 06:20:11</td>
-                                <td class="px-6 py-4">2024-12-07 06:20:11</td>
-                            </tr>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">5</td>
-                                <td class="px-6 py-4">digitaled.obf.id</td>
-                                <td class="px-6 py-4">2024-05-06 12:01:47</td>
-                                <td class="px-6 py-4">2024-06-01 13:59:03</td>
-                            </tr>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">6</td>
-                                <td class="px-6 py-4">www.pentest.obf.id</td>
-                                <td class="px-6 py-4">2021-05-17 05:20:12</td>
-                                <td class="px-6 py-4">2021-05-17 05:20:12</td>
-                            </tr>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">7</td>
-                                <td class="px-6 py-4">webmail.obf.id</td>
-                                <td class="px-6 py-4">2020-08-11 09:31:43</td>
-                                <td class="px-6 py-4">2020-08-11 09:31:43</td>
-                            </tr>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">8</td>
-                                <td class="px-6 py-4">www.digitalize.obf.id</td>
-                                <td class="px-6 py-4">2024-01-06 02:30:21</td>
-                                <td class="px-6 py-4">2024-01-06 02:30:21</td>
-                            </tr>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">9</td>
-                                <td class="px-6 py-4">mail.obf.id</td>
-                                <td class="px-6 py-4">2020-04-26 10:07:05</td>
-                                <td class="px-6 py-4">2020-04-26 10:07:05</td>
-                            </tr>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">10</td>
-                                <td class="px-6 py-4">www.testdigitalize.obf.id</td>
-                                <td class="px-6 py-4">2024-05-15 11:07:27</td>
-                                <td class="px-6 py-4">2025-01-15 01:06:20</td>
-                            </tr>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">11</td>
-                                <td class="px-6 py-4">pentest.obf.id</td>
-                                <td class="px-6 py-4">2021-05-17 05:20:12</td>
-                                <td class="px-6 py-4">2024-04-02 06:07:19</td>
-                            </tr>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">12</td>
-                                <td class="px-6 py-4">testdigitalize.obf.id</td>
-                                <td class="px-6 py-4">2024-05-15 11:07:27</td>
-                                <td class="px-6 py-4">2025-01-15 01:06:20</td>
-                            </tr>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">13</td>
-                                <td class="px-6 py-4">www.obf.id</td>
-                                <td class="px-6 py-4">2020-08-11 09:31:43</td>
-                                <td class="px-6 py-4">2024-12-25 06:41:43</td>
-                            </tr>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">14</td>
-                                <td class="px-6 py-4">cpcalendars.obf.id</td>
-                                <td class="px-6 py-4">2020-08-11 09:31:43</td>
-                                <td class="px-6 py-4">2020-08-11 09:31:43</td>
-                            </tr>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">15</td>
-                                <td class="px-6 py-4">digitalize.obf.id</td>
-                                <td class="px-6 py-4">2023-06-16 09:55:03</td>
-                                <td class="px-6 py-4">2024-01-06 02:30:21</td>
-                            </tr>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">16</td>
-                                <td class="px-6 py-4">cpanel.obf.id</td>
-                                <td class="px-6 py-4">2020-08-11 09:31:43</td>
-                                <td class="px-6 py-4">2020-08-11 09:31:43</td>
-                            </tr>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <td class="px-6 py-4">17</td>
-                                <td class="px-6 py-4">svr1.obf.id</td>
-                                <td class="px-6 py-4">2022-03-13 22:18:42</td>
-                                <td class="px-6 py-4">2025-01-15 12:54:02</td>
-                            </tr>
-                        </tbody>
-                    </tbody>
-                </table>
-            </div>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Subdomain Table -->
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="px-6 py-4 bg-gray-100 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Subdomain Information</h2>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        @foreach (['No', 'Subdomain', 'Type', 'Value', 'Ports', 'Last Seen'] as $header)
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                {{ $header }}
+                            </th>
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @foreach ($records as $index => $record)
+                        <tr class="hover:bg-gray-50 transition duration-200">
+                            <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $index + 1 }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ $record['subdomain'] ?: '-' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ $record['type'] }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ $record['value'] }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">
+                                {{ isset($record['ports']) && is_array($record['ports']) ? implode(', ', $record['ports']) : '-' }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-700">{{ $record['last_seen'] ?? '-' }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
+
+
 
 <!-- Countdown Script -->
 <script>

@@ -14,14 +14,10 @@ app(Schedule::class)->command('shodan:check-new-ports')->everyFiveMinutes();
 app(Schedule::class)->command('domains:update')->daily();
 app(Schedule::class)->command('crawl:cvedata')->everyFiveMinutes();
 app(Schedule::class)->command('crawl:cve')->everyFiveMinutes();
-app(Schedule::class)->command('tweet:fetch')->everyMinute();
-app(Schedule::class)->command('fetch:cyber-news')->everyMinute();
 app(Schedule::class)->command('hackernews:fetch')->everyMinute();
-app(Schedule::class)->command('fetch:ip-reports')->everyFiveMinutes();
-app(Schedule::class)->command('fetch:indonesia-ip-reports')->everyFiveMinutes();
 app(Schedule::class)->command('fetch:x')->everyFifteenMinutes();
-app(Schedule::class)->command('analyze:sentiment')->everyFifteenMinutes();
-
+app(Schedule::class)->command('shodan:fetch-subdomains')->everyFifteenMinutes();
+app(Schedule::class)->command('shodan:fetch-alerts')->daily();
 
 // Penjadwalan untuk scanning domain pada jam 17:00
 app(Schedule::class)->call(function () {

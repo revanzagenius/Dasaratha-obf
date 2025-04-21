@@ -1,188 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threat Intelligence Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <style>
-        body {
-            background: #f8f9fa;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-        }
-        .floating-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(255,255,255,0.8) 10%, transparent 70%);
-            animation: moveBackground 10s infinite alternate;
-        }
-        @keyframes moveBackground {
-            from {
-                transform: translateX(-10px) translateY(-10px);
-            }
-            to {
-                transform: translateX(10px) translateY(10px);
-            }
-        }
-        .container {
-            display: flex;
-            width: 800px;
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            position: relative;
-            z-index: 2;
-        }
-        .left-panel {
-            width: 50%;
-            background: #f8f9fa;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            animation: fadeInLeft 1.5s ease-in-out;
-        }
-        @keyframes fadeInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        .left-panel img {
-            max-width: 100%;
-            height: auto;
-        }
-        .right-panel {
-            width: 50%;
-            padding: 40px;
-            text-align: center;
-            animation: fadeInRight 1.5s ease-in-out;
-        }
-        @keyframes fadeInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        .right-panel h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .form-control {
-            background: rgba(0, 0, 0, 0.05);
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            transition: 0.3s;
-        }
-        .form-control:focus {
-            box-shadow: 0px 0px 8px rgba(255, 65, 108, 0.5);
-        }
-        .btn-login {
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            color: white;
-            transition: 0.3s ease-in-out;
-            box-shadow: 0px 4px 10px rgba(255, 65, 108, 0.3);
-        }
-        .btn-login:hover {
-            background: linear-gradient(135deg, #ff4b2b, #ff416c);
-            transform: scale(1.1);
-            box-shadow: 0px 6px 15px rgba(255, 65, 108, 0.5);
-        }
-        .particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 1;
-            pointer-events: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dasaratha</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #ffffff; /* Background abu-abu */
+      color: white;
+      height: 100vh;
+      margin: 0;
+    }
+    .container-fluid {
+      height: 100%;
+    }
+    .logo-section {
+      background-color: #ffffff;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 0 20px;
+    }
+    .logo-section img {
+      width: 400px; /* Ukuran logo lebih besar */
+      max-width: 90%; /* Agar responsif pada layar kecil */
+      margin-bottom: 20px;
+    }
+    .logo-section h1 {
+      font-size: 3rem;
+      font-weight: bold;
+      text-align: center;
+    }
+    .login-section {
+      background-color: #a80000; /* Background putih */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px;
+    }
+    .login-section h2 {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .login-section .form-label {
+      font-weight: bold;
+    }
+    .login-section .btn-primary {
+      background-color: #d14103;
+      border: none;
+    }
+    .login-section .btn-primary:hover {
+      background-color: #ff5005;
+    }
+    .login-section .text-muted {
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    @media (min-width: 768px) {
+      .logo-section {
+        flex: 3; /* Memperbesar bagian logo */
+      }
+      .login-section {
+        flex: 1; /* Memperkecil bagian login */
+      }
+    }
+    body {
+    background-color: #000; /* Warna latar belakang gelap agar efek listrik terlihat jelas */
+    position: relative;
+    overflow: hidden;
+  }
+
+  .electricity {
+    position: absolute;
+    width: 2px;
+    height: 100px;
+    background: linear-gradient(to bottom, rgba(0, 255, 255, 1), rgba(0, 255, 255, 0.5), rgba(0, 255, 255, 0));
+    animation: flicker 0.1s infinite ease-in-out;
+    transform: rotate(0deg);
+  }
+
+  @keyframes flicker {
+    0%, 100% {
+      transform: rotate(calc(360deg * var(--random-angle)));
+      opacity: 1;
+    }
+    50% {
+      transform: rotate(calc(360deg * var(--random-angle) - 10deg));
+      opacity: 0.7;
+    }
+  }
+  </style>
 </head>
 <body>
-    <canvas class="particles"></canvas>
-    <div class="floating-bg"></div>
-    <div class="container">
-        <div class="left-panel">
-            <img src="logo.png" alt="Company Logo">
-        </div>
-        <div class="right-panel">
-            <h2>Secure Login</h2>
+  <div class="container-fluid">
+    <div class="row h-100">
+      <!-- Bagian Logo -->
+      <div class="col-md-8 logo-section">
+        <img src="logo.png" alt="Dasaratha">
+      </div>
+      <!-- Bagian Login -->
+      <div class="col-md-4 login-section">
+        <h2>Sign In</h2>
 
-            @if ($errors->any())
+        @if ($errors->any())
             <div class="alert alert-danger">
                 @foreach ($errors->all() as $error)
                     <p>{{ $error }}</p>
                 @endforeach
             </div>
-            @endif
+        @endif
 
-            <form method="POST" action="{{ route('login.submit') }}">
-                @csrf
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="floatingInput" placeholder="Username or Email" name="email">
-                    <label for="floatingInput">Email</label>
-                </div>
+        <form method="POST" action="{{ route('login.submit') }}">
+            @csrf
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="floatingInput" placeholder="Usermane or Email" name="email">
+                <label for="floatingInput">Email</label>
+            </div>
 
-                <div class="form-floating mb-3">
-                    <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
-                    <label for="floatingPassword">Password</label>
-                </div>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="floatingPassword" placeholder="password" name="password">
+                <label for="floatingPassword">Password</label>
+            </div>
 
-                <button type="submit" class="btn btn-login w-100">Login</button>
-            </form>
-        </div>
+            <button class="btn btn-primary w-100 login-btn mb-3">
+                Login
+            </button>
+        </form>
+      </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const canvas = document.querySelector(".particles");
-        const ctx = canvas.getContext("2d");
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const particles = Array.from({ length: 100 }, () => ({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            radius: Math.random() * 2,
-            speed: Math.random() * 1.5,
-        }));
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = "rgba(255, 65, 108, 0.5)";
-                ctx.fill();
-                p.y += p.speed;
-                if (p.y > canvas.height) p.y = 0;
-            });
-            requestAnimationFrame(animate);
-        }
-        animate();
-    </script>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function createBubble() {
+      const body = document.body;
+      const bubble = document.createElement('div');
+      bubble.classList.add('bubble');
+
+      // Tentukan posisi horizontal acak
+      const size = Math.random() * 50 + 10; // Ukuran acak
+      bubble.style.width = `${size}px`;
+      bubble.style.height = `${size}px`;
+      bubble.style.left = `${Math.random() * 100}vw`;
+      bubble.style.animationDuration = `${Math.random() * 5 + 5}s`; // Durasi animasi acak
+      bubble.style.animationDelay = `${Math.random() * 3}s`;
+
+      body.appendChild(bubble);
+
+      // Hapus elemen bubble setelah animasi selesai
+      bubble.addEventListener('animationend', () => {
+        bubble.remove();
+      });
+    }
+
+    // Tambahkan bubble secara berkala
+    setInterval(createBubble, 500);
+  </script>
 </body>
 </html>

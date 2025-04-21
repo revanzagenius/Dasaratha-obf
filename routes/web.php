@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CVEController;
 use App\Http\Controllers\OTXController;
 use App\Http\Middleware\AuthMiddleware;
+use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ScanController;
@@ -22,8 +23,11 @@ use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TweetFeedController;
 use App\Http\Middleware\AutoLogoutMiddleware;
+use App\Http\Controllers\OrganizationController;
 use App\Http\Middleware\SingleSessionMiddleware;
 use App\Http\Controllers\MainDashboardController;
+use App\Http\Controllers\VipImpersonateController;
+use App\Http\Controllers\BrandMonitoringController;
 
 Route::get('/', [AuthController::class, 'index'])->name('login.index');
 Route::post('/', [AuthController::class, 'login'])->name('login.submit');
@@ -31,6 +35,7 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 Route::middleware([AuthMiddleware::class, AutoLogoutMiddleware::class, SingleSessionMiddleware::class])->group(function () {
+    //USER
     Route::get('/user-management', [AuthController::class, 'usermanagement'])->name('user.management');
     Route::get('/login-logs', [AuthController::class, 'loglogin'])->name('login-logs');
     Route::post('/user-management', [AuthController::class, 'store'])->name('user.store');
@@ -38,14 +43,19 @@ Route::middleware([AuthMiddleware::class, AutoLogoutMiddleware::class, SingleSes
     Route::put('user/{id}', [AuthController::class, 'update'])->name('user.update');
     Route::delete('user/{id}', [AuthController::class, 'destroy'])->name('user.destroy');
 
+
     //DASHBOARD
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.indexd');
 
     //NEWS
     Route::get('/news', [NewsController::class, 'index'])->name('news.index'); // Fetch dan simpan ke DB
+    Route::get('/news-dashboard', [NewsController::class, 'dashboard'])->name('news.dashboard');
     // Route::get('/news/show', [NewsController::class, 'show'])->name('news.show'); // Tampilkan dari DB
+
+    Route::get('/malware/dashboard', [NewsController::class, 'malwaredashboard'])->name('malware.dashboard');
     Route::get('/malware-trends', [NewsController::class, 'malware'])->name('malware.index');
     Route::get('/malware/{name}', [NewsController::class, 'detail'])->name('malware.detail');
+
     Route::get('/feeds', [NewsController::class, 'Feeds']);
     Route::get('/hackernews', [NewsController::class, 'hackernews'])->name('hackernews');
 
@@ -74,16 +84,12 @@ Route::middleware([AuthMiddleware::class, AutoLogoutMiddleware::class, SingleSes
     Route::get('/shodan', [ShodanController::class, 'index'])->name('search.index');
     Route::get('/shodan/search', [ShodanController::class, 'search'])->name('shodan.search');
 
-    // SCANNING
-    Route::get('/scan', [ScanController::class, 'index'])->name('ipscanner');
-    Route::post('/shodan/scan', [ScanController::class, 'scan']); // Rute untuk melakukan pemindaian
-
     //DOMAIN
     Route::get('/domains/organization', [DomainController::class, 'organization'])->name('organization');
     Route::get('/domains', [DomainController::class, 'index'])->name('domains.index');
     Route::post('/domains', [DomainController::class, 'fetchAndStoreDomainData'])->name('domains.store');
     Route::delete('/domains/{id}', [DomainController::class, 'destroy'])->name('domains.destroy');
-    Route::get('/subdomain', [DomainController::class, 'subdomain'])->name('subdomain.index');
+    // Route::get('/subdomain', [DomainController::class, 'subdomain'])->name('subdomain.index');
     Route::get('/domains/download-pdf', [DomainController::class, 'downloadPdf'])->name('domains.downloadPdf');
 
     //ANYRUN
@@ -92,27 +98,9 @@ Route::middleware([AuthMiddleware::class, AutoLogoutMiddleware::class, SingleSes
     Route::get('/search', [DeHashedController::class, 'index'])->name('databreach.index');
     Route::post('/search', [DeHashedController::class, 'search'])->name('databreach.search');
 
-
-    Route::get('/rss-mostrecent', [RSSFeedController::class, 'mostrecent'])->name('rss.mostrecent');
-    Route::get('/rss-indonesia', [RSSFeedController::class, 'indonesia'])->name('rss.indonesia');
-
     Route::get('/breaches', [BreachController::class, 'index'])->name('breaches.index');
 
-    Route::get('/passwords', [PasswordController::class, 'index'])->name('passwords.index');
 
-
-    Route::get('/tweet-feed/{category?}', [TweetFeedController::class, 'index'])->name('tweet.feed');
-
-    // Route::post('/scan', [ScanController::class, 'storeScan'])->name('scan.store');
-
-    Route::get('/main-dashboard',[MainDashboardController::class, 'index'])->name('main-dashboard.index');
-
-    Route::get('/otx/pulses', [OTXController::class, 'index'])->name('otx.index');
-    Route::get('/otx/pulses/{id}/download', [OTXController::class, 'downloadPdf'])->name('otx.download');
-    Route::get('/otx/pulses/{id}', [OTXController::class, 'show'])->name('otx.show');
-
-    Route::get('/tweets', [TweetController::class, 'index'])->name('tweets.index');
-    Route::get('/tweets-dashboard', [TweetController::class, 'dashboard'])->name('tweets.dashboard');
 });
 
 Route::get('/send-email', function () {

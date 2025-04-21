@@ -138,6 +138,9 @@
                 <div id="map" class="h-[450px] w-full rounded-lg border border-gray-200 shadow-lg"></div>
             </div>
 
+
+
+
             <!-- Charts Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 mt-6">
                 <!-- Data Monitor Chart -->
@@ -189,9 +192,69 @@
                 </div>
             </div>
 
-            
+                        <!-- Hosts Information Tables -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+    <!-- Left Table: IP, Hostnames, Ports -->
+    <div class="bg-white rounded-xl shadow-xl p-6">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Hosts - Open Ports</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border border-gray-200 rounded-lg">
+                <thead class="bg-gray-100 text-gray-700">
+                    <tr>
+                        <th class="px-4 py-2 border">IP</th>
+                        <th class="px-4 py-2 border">Hostnames</th>
+                        <th class="px-4 py-2 border">Ports</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-900">
+                    @foreach($shodanHosts as $host)
+                        <tr class="border-t">
+                            <td class="px-4 py-2 border">{{ $host->ip }}</td>
+                            <td class="px-4 py-2 border">
+                                {{ implode(', ', json_decode($host->hostnames, true) ?? []) }}
+                            </td>
+                            <td class="px-4 py-2 border">
+                                {{ implode(', ', json_decode($host->ports, true) ?? []) }}
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
+
+    <!-- Right Table: IP, Hostnames, Vulns -->
+    <div class="bg-white rounded-xl shadow-xl p-6">
+        <h2 class="text-lg font-bold text-gray-900 mb-4">Hosts - Vulnerabilities</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border border-gray-200 rounded-lg">
+                <thead class="bg-gray-100 text-gray-700">
+                    <tr>
+                        <th class="px-4 py-2 border">IP</th>
+                        <th class="px-4 py-2 border">Hostnames</th>
+                        <th class="px-4 py-2 border">Vulnerabilities</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-900">
+                    @foreach($shodanHosts as $host)
+                        <tr class="border-t">
+                            <td class="px-4 py-2 border">{{ $host->ip }}</td>
+                            <td class="px-4 py-2 border">
+                                {{ implode(', ', json_decode($host->hostnames, true) ?? []) }}
+                            </td>
+                            <td class="px-4 py-2 border">
+                                {{ implode(', ', json_decode($host->vulns, true) ?? []) }}
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+
 
     <!-- Leaflet.js -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
