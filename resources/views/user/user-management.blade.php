@@ -20,7 +20,6 @@
                         <th class="px-4 py-2 border-b">Name</th>
                         <th class="px-4 py-2 border-b">Email</th>
                         <th class="px-4 py-2 border-b">Role</th>
-                        <th class="px-4 py-2 border-b">Organization</th>
                         <th class="px-4 py-2 border-b">Action</th>
                     </tr>
                 </thead>
@@ -31,7 +30,6 @@
                         <td class="px-4 py-2 border-b">{{ $user->name }}</td>
                         <td class="px-4 py-2 border-b">{{ $user->email }}</td>
                         <td class="px-4 py-2 border-b">{{ $user->role->name ?? 'No Role' }}</td>
-                        <td class="px-4 py-2 border-b">{{ $user->organization->name ?? 'No Organization' }}</td>
                         <td class="px-4 py-2 border-b">
                             <a href="{{ route('user.edit', $user->id) }}" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Edit</a>
                             <!-- Form untuk delete user -->
@@ -72,14 +70,6 @@
                     <select id="role" name="role" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         @foreach ($roles as $role)
                             <option value="{{ $role->id }}">{{ $role->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="mb-4">
-                    <label for="organization" class="block text-gray-600">Organization</label>
-                    <select id="organization" name="organization" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        @foreach ($organizations as $organization)
-                            <option value="{{ $organization->id }}">{{ $organization->name }}</option>
                         @endforeach
                     </select>
                 </div>

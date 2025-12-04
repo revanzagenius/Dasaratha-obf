@@ -43,6 +43,8 @@ Route::middleware([AuthMiddleware::class, AutoLogoutMiddleware::class, SingleSes
     Route::put('user/{id}', [AuthController::class, 'update'])->name('user.update');
     Route::delete('user/{id}', [AuthController::class, 'destroy'])->name('user.destroy');
 
+    Route::get('/profile/edit', [AuthController::class, 'profile'])->name('profile.edit');
+    Route::post('/profile/update', [AuthController::class, 'profileupdate'])->name('profile.update');
 
     //DASHBOARD
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.indexd');

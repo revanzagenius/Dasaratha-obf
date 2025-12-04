@@ -13,6 +13,8 @@ class DehashedResult extends Model
         'username',
         'email',
         'password',
+        'source_url',   // NEW
+        'hash',         // NEW
         'status',
         'last_scanned_at',
     ];

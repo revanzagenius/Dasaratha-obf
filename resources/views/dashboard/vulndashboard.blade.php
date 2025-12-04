@@ -99,18 +99,20 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                    @if($vulnerability->cvss_score < 4) bg-green-100 text-green-800
+                                    @if(is_null($vulnerability->cvss_score)) bg-gray-200 text-gray-600
+                                    @elseif($vulnerability->cvss_score < 4) bg-green-100 text-green-800
                                     @elseif($vulnerability->cvss_score < 7) bg-yellow-100 text-yellow-800
                                     @else bg-red-100 text-red-800
                                     @endif">
-                                    {{ $vulnerability->cvss_score }}
+                                    {{ $vulnerability->cvss_score ?? 'N/A' }}
                                 </span>
+
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {{ $vulnerability->published_at }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <a href="{{ $vulnerability->detail_url }}" target="_blank" 
+                                <a href="{{ $vulnerability->detail_url }}" target="_blank"
                                    class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                                     View Details
                                 </a>

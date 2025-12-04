@@ -130,8 +130,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h2 class="text-lg font-bold text-gray-900">Global Threat Map</h2>
-                            <p class="text-sm text-gray-500">Geographic distribution of threats</p>
+                            <h2 class="text-lg font-bold text-gray-900">IP Tracker Map</h2>
+                            <p class="text-sm text-gray-500">Geographic Map IP Tracker</p>
                         </div>
                     </div>
                 </div>

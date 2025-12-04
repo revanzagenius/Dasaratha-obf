@@ -10,6 +10,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Services\WhoisAPIService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class DomainController extends Controller
 {
@@ -39,34 +40,57 @@ class DomainController extends Controller
     public function fetchAndStoreDomainData(Request $request)
     {
         $request->validate([
-            'domain' => 'required|url',
+            'domain' => 'required|string',
         ]);
 
-        $domainName = parse_url($request->domain, PHP_URL_HOST);
-        $domainData = $this->whoisService->fetchDomainData($domainName);
+        $input = trim($request->input('domain'));
 
-        if ($domainData) {
-            $registryData = $domainData['WhoisRecord']['registryData'];
-
-            $domain = Domain::updateOrCreate(
-                ['domain_name' => $domainName],
-                [
-                    'expiry_date' => Carbon::parse($registryData['expiresDate'])->format('Y-m-d'),
-                    'ssl_expiry_date' => null, // Tambahkan logika untuk SSL jika ada
-                    'registrar_name' => $registryData['registrarName'] ?? null,
-                    'created_date' => Carbon::parse($registryData['createdDate'])->format('Y-m-d H:i:s'),
-                    'updated_date' => Carbon::parse($registryData['updatedDate'])->format('Y-m-d H:i:s'),
-                    'name_servers' => json_encode($registryData['nameServers']['hostNames'] ?? []),
-                    'domain_status' => $registryData['status'] ?? null,
-                    'additional_info' => json_encode($domainData), // Simpan data mentah untuk referensi
-                    'organization_id' => Auth::user()->organization_id, // Ambil dari user yang login
-                ]
-            );
-
-            return redirect()->route('domains.index')->with('success', 'Domain berhasil ditambahkan.');
+        // Normalize input: accept full URLs or plain domain names
+        if (filter_var($input, FILTER_VALIDATE_URL)) {
+            $domainName = parse_url($input, PHP_URL_HOST);
+        } else {
+            // strip protocol and path if present, keep hostname
+            $domainName = preg_replace('#^https?://#', '', strtolower($input));
+            $domainName = preg_replace('#^www\.#', '', $domainName);
+            $domainName = explode('/', $domainName)[0];
         }
 
-        return redirect()->back()->with('error', 'Gagal mengambil data domain.');
+        // Validate domain name
+        if (! $domainName || ! filter_var($domainName, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)) {
+            return redirect()->back()->with('error', 'Domain tidak valid. Gunakan format seperti example.com atau https://example.com');
+        }
+
+        $domainData = $this->whoisService->fetchDomainData($domainName);
+
+        // Defensive checks for API response
+        if (! $domainData || ! isset($domainData['WhoisRecord']['registryData'])) {
+            // Log detailed info for debugging (not shown to user)
+            Log::error('Whois fetch failed', [
+                'domain' => $domainName,
+                'response' => $domainData,
+            ]);
+
+            return redirect()->back()->with('error', 'Gagal mengambil data domain. Pastikan API key terpasang dan nama domain valid.');
+        }
+
+        $registryData = $domainData['WhoisRecord']['registryData'];
+
+        $domain = Domain::updateOrCreate(
+            ['domain_name' => $domainName],
+            [
+                'expiry_date' => isset($registryData['expiresDate']) ? Carbon::parse($registryData['expiresDate'])->format('Y-m-d') : null,
+                'ssl_expiry_date' => null, // Tambahkan logika untuk SSL jika ada
+                'registrar_name' => $registryData['registrarName'] ?? null,
+                'created_date' => isset($registryData['createdDate']) ? Carbon::parse($registryData['createdDate'])->format('Y-m-d H:i:s') : null,
+                'updated_date' => isset($registryData['updatedDate']) ? Carbon::parse($registryData['updatedDate'])->format('Y-m-d H:i:s') : null,
+                'name_servers' => json_encode($registryData['nameServers']['hostNames'] ?? []),
+                'domain_status' => $registryData['status'] ?? null,
+                'additional_info' => json_encode($domainData), // Simpan data mentah untuk referensi
+                'organization_id' => Auth::user()->organization_id, // Ambil dari user yang login
+            ]
+        );
+
+        return redirect()->route('domains.index')->with('success', 'Domain berhasil ditambahkan.');
     }
 
     // public function subdomain()

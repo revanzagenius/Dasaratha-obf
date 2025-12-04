@@ -112,7 +112,10 @@
                                     {{ ucfirst($domain->domain_status) }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-sm countdown text-gray-700" data-expiry="{{ $domain->expiry_date }}"></td>
+                            <td class="px-6 py-4 text-sm countdown font-semibold" data-expiry="{{ $domain->expiry_date }}"></td>
+
+
+
                             <td class="px-6 py-4 text-sm space-x-2 flex">
                                 <a href="{{ route('domains.downloadPdf') }}"
                                     class="inline-flex items-center px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded-md hover:bg-indigo-700 transition">
@@ -122,6 +125,7 @@
                                     </svg>
                                     PDF
                                 </a>
+@if(auth()->user()->role_id == 1)
                                 <form action="{{ route('domains.destroy', $domain->id) }}" method="POST" class="inline-block">
                                     @csrf
                                     @method('DELETE')
@@ -135,6 +139,7 @@
                                         Delete
                                     </button>
                                 </form>
+@endif
                             </td>
                         </tr>
                     @endforeach
@@ -193,7 +198,7 @@
 
             if (timeLeft > 0) {
                 const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-                const textColor = days <= 30 ? 'text-red-600' : days <= 90 ? 'text-yellow-600' : 'text-green-600';
+                const textColor = days <= 30 ? 'text-red-100' : days <= 90 ? 'text-yellow-100' : 'text-green-100';
                 element.innerHTML = `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${textColor} bg-opacity-10 ${textColor.replace('text', 'bg')}">${days} hari lagi</span>`;
             } else {
                 element.innerHTML = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Expired</span>';

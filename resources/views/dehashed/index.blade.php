@@ -88,6 +88,7 @@
                             <th class="px-4 py-2">Email</th>
                             <th class="px-4 py-2">Password</th>
                             <th class="px-4 py-2">Hash</th>
+                            <th class="px-4 py-2">Source URL</th>   <!-- ⬅ TAMBAH INI -->
                             <th class="px-4 py-2">Last Scan</th>
                         </tr>
                     </thead>
@@ -99,10 +100,16 @@
                                 <td class="px-4 py-2 border-t border-gray-300">{{ $entry->email ?? '-' }}</td>
                                 <td class="px-4 py-2 border-t border-gray-300">{{ $entry->password ?? '-' }}</td>
                                 <td class="px-4 py-2 border-t border-gray-300">{{ $entry->hash ?? '-' }}</td>
+
+                               <td class="px-4 py-2 border-t border-gray-300">
+                                    {{ $entry->source_url ?? '-' }}
+                                </td>
+
+
                                 <td class="px-4 py-2 border-t border-gray-300">{{ $entry->last_scanned_at ?? 'N/A' }}</td>
                             </tr>
                         @endforeach
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
         </div>

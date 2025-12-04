@@ -102,6 +102,7 @@
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
                         <div class="relative">
                             <!-- Delete Button -->
+@if(auth()->user()->role_id == 1)
                             <form action="{{ route('hosts.destroy', $host->id) }}" method="POST" class="absolute top-4 right-4">
                                 @csrf
                                 @method('DELETE')
@@ -114,7 +115,7 @@
                                     </svg>
                                 </button>
                             </form>
-
+@endif
                             <!-- Scan Details -->
                             <div class="p-6">
                                 <h3 class="text-lg font-semibold text-slate-900 mb-4">Scan Results</h3>

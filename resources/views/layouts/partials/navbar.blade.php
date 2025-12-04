@@ -31,9 +31,17 @@
                         <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo">
                     </button>
 
+                   
                     <div class="absolute right-0 z-50 hidden mt-2 text-base bg-white border border-gray-100 rounded-lg shadow-lg dark:bg-gray-700 dark:border-gray-600 min-w-[200px]"
                         id="dropdown-user">
                         <ul class="py-2" role="none">
+                            <li>
+                                <a href="{{ route('profile.edit') }}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white transition-colors duration-200"
+                                    role="menuitem">
+                                    Edit Profile
+                                </a>
+                            </li>
                             <li>
                                 <a href="{{ route('logout') }}"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white transition-colors duration-200"
@@ -42,8 +50,8 @@
                                 </a>
                             </li>
                         </ul>
-                    </div>
-                </div>
+                    </div>                
+	      </div>
             </div>
         </div>
     </div>
@@ -297,7 +305,9 @@
             </li>
 
             {{-- User Management Section --}}
+
             <li>
+@if(auth()->user()->role_id == 1)
                 <button type="button"
                     class="flex items-center w-full p-2 text-gray-900 transition-all duration-200 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
                     aria-controls="dropdown-users" data-collapse-toggle="dropdown-users">
@@ -321,6 +331,7 @@
                             Login Logs
                         </a>
                     </li>
+@endif
                 </ul>
             </li>
         </ul>

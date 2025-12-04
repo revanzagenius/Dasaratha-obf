@@ -18,14 +18,14 @@ class DeHashedController extends Controller
         $data = $this->search($domain);
         $vip_list = Breach::all();
 
-        // Mengambil semua data dan memastikan 'updated_at' adalah objek Carbon
         $allData = DehashedResult::all()->map(function ($entry) {
-            $entry->updated_at = Carbon::parse($entry->updated_at); // Konversi ke objek Carbon
+            $entry->updated_at = Carbon::parse($entry->updated_at);
             return $entry;
         });
 
         return view('dehashed.index', compact('data', 'allData', 'vip_list'));
     }
+
 
     public function getAllData()
     {
@@ -36,69 +36,117 @@ class DeHashedController extends Controller
     }
 
 
-    public function search($domain)
-    {
-        $lastScan = DehashedResult::where('domain', $domain)->latest()->first();
+   public function search($domain)
+{
+    // CEK: apakah domain sudah discan hari ini?
+    $existing = DehashedResult::where('domain', $domain)
+        ->whereDate('last_scanned_at', Carbon::today())
+        ->first();
 
-        if ($lastScan && $lastScan->last_scanned_at) {
-            $lastScannedAt = Carbon::parse($lastScan->last_scanned_at);
+    if ($existing) {
+        // Ambil data existing dari DB tanpa API call
+        return [
+            'total_results' => DehashedResult::where('domain', $domain)->count(),
+            'entries'       => DehashedResult::where('domain', $domain)->get(),
+            'status'        => 'cached'
+        ];
+    }
 
-            if ($lastScannedAt->isToday()) {
-                return [];
-            }
+    // Jika BELUM discan hari ini → scan API
+    $url = 'https://api.dehashed.com/v2/search';
+    $apiKey = env('DEHASHED_API_KEY');
 
-            if ($lastScannedAt->diffInDays(Carbon::now()) < 1) {
-                return [];
-            }
-        }
+    $response = Http::withHeaders([
+        'Dehashed-Api-Key' => $apiKey,
+        'Content-Type' => 'application/json',
+    ])->post($url, [
+        'query' => "domain:$domain",
+        'page' => 1,
+        'size' => 100
+    ]);
 
-        $url = 'https://api.dehashed.com/v2/search';
-        $query = 'domain:' . $domain;
-
-        $apiKey = env('DEHASHED_API_KEY');
-
-        // Kirim POST request ke Dehashed v2
-        $response = Http::withHeaders([
-            'Dehashed-Api-Key' => $apiKey,
-            'Content-Type' => 'application/json',
-        ])->post($url, [
-            'query' => $domain, // Misalnya: 'bri.co.id'
-            'page' => 1,
-            'size' => 100,
-            'regex' => false,
-            'wildcard' => false,
-            'de_dupe' => false
-        ]);
-
-        if ($response->successful()) {
-            $data = $response->json();
-
-            if (isset($data['entries']) && count($data['entries']) > 0) {
-                foreach ($data['entries'] as $entry) {
-                    DehashedResult::create([
-                        'domain' => $domain,
-                        'username' => $entry['username'][0] ?? null,
-                        'email' => $entry['email'][0] ?? null,
-                        'password' => $entry['password'][0] ?? null,
-                        'status' => 'found',
-                        'last_scanned_at' => now(),
-                    ]);
-                }
-            } else {
-                DehashedResult::create([
-                    'domain' => $domain,
-                    'username' => null,
-                    'email' => null,
-                    'password' => null,
-                    'status' => 'null',
-                    'last_scanned_at' => now(),
-                ]);
-            }
-
-            return $data;
-        }
-
-        Log::error('API request failed for domain: ' . $domain . ' | Response: ' . $response->body());
+    if (!$response->successful()) {
+        Log::error('Dehashed failed: '.$response->body());
         return null;
     }
+
+    $data = $response->json();
+
+    // HAPUS DATA LAMA sebelum insert data scan baru
+    DehashedResult::where('domain', $domain)->delete();
+
+    if (!empty($data['entries'])) {
+
+        foreach ($data['entries'] as $entry) {
+            DehashedResult::create([
+                'domain'        => $domain,
+                'username'      => $this->normalize($entry['username'] ?? null),
+                'email'         => $this->normalize($entry['email'] ?? null),
+                'password'      => $this->normalize($entry['password'] ?? null),
+                'hash'          => $this->normalize($entry['hash'] ?? null),
+                'source_url'    => $this->extractUrl($entry),
+                'status'        => 'found',
+                'last_scanned_at' => now(),
+            ]);
+        }
+    } else {
+        DehashedResult::create([
+            'domain' => $domain,
+            'status' => 'clean',
+            'last_scanned_at' => now(),
+        ]);
+    }
+
+    return $data;
+}
+
+
+private function normalize($value)
+{
+    if (is_array($value)) {
+        return $value[0] ?? null;
+    }
+    return $value;
+}
+
+private function extractUrl($entry)
+{
+    // 1. Kalau ada field 'url' langsung dari API
+    if (isset($entry['url'])) {
+
+        $url = is_array($entry['url'])
+            ? ($entry['url'][0] ?? null)
+            : $entry['url'];
+
+        if ($url) {
+            // Kalau tidak ada http/https → tambahkan otomatis
+            if (!preg_match('/^https?:\/\//i', $url)) {
+                return "https://" . $url;
+            }
+            return $url;
+        }
+    }
+
+    // 2. Jika tidak ada field url, scan semua kolom pakai regex
+    foreach ($entry as $value) {
+
+        if (is_array($value)) {
+            $value = $value[0] ?? null;
+        }
+
+        if (!$value || !is_string($value)) continue;
+
+        preg_match('/(https?:\/\/[^\s"]+)/i', $value, $match);
+
+        if (!empty($match)) {
+            return $match[0];
+        }
+    }
+
+    return null;
+}
+
+
+
+
 }

@@ -52,15 +52,12 @@ class AuthController extends Controller
     public function Usermanagement()
     {
         // Mengambil semua data user dengan relasi role dan organization
-        $users = User::with(['role', 'organization'])->get();
+        $users = User::with(['role'])->get();
 
         // Mengambil semua role untuk menampilkan dropdown pilihan role
         $roles = Role::all();
 
-        // Mengambil semua organisasi untuk dropdown
-        $organizations = Organization::all();
-
-        return view('user.user-management', compact('users', 'roles', 'organizations')); // Mengirim data ke view
+        return view('user.user-management', compact('users', 'roles')); // Mengirim data ke view
     }
 
     public function store(Request $request)
@@ -70,7 +67,6 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'role_id' => $request->role,
-            'organization_id' => $request->organization, // Tambahkan ini
         ]);
 
         return redirect()->back()->with('success', 'User berhasil ditambahkan.');
@@ -83,6 +79,45 @@ class AuthController extends Controller
         $roles = Role::all(); // Ambil semua roles
         return view('user.edit', compact('user', 'roles'));
     }
+
+public function profile()
+    {
+        $user = Auth::user();
+        return view('profile.edit', compact('user'));
+    }
+
+public function profileupdate(Request $request)
+{
+    $user = Auth::user();
+
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+    ]);
+
+    $updateData = [
+        'name' => $request->name,
+        'email' => $request->email,
+    ];
+
+    // Jika user isi password, lakukan validasi dan update password
+    if ($request->filled('current_password') || $request->filled('password') || $request->filled('password_confirmation')) {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'Password saat ini salah.']);
+        }
+
+        $updateData['password'] = Hash::make($request->password);
+    }
+
+    $user->update($updateData);
+
+    return redirect()->route('profile.edit')->with('success', 'Profil berhasil diperbarui.');
+}
 
     public function update(Request $request, $id)
     {
